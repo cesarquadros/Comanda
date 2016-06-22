@@ -2,33 +2,46 @@ package model;
 
 public class Produtos {
 
-	private int idProdutos;
-	private int idCategoria;
+	private int codProdutos;
+	private int codCategoria;
 	private String descricao;
 	private float preco;
 	
 	
-	public int getIdProdutos() {
-		return idProdutos;
+	public Produtos(int codCategoria, String descricao, float preco){
+		this.codCategoria = codCategoria;
+		this.descricao = descricao;
+		this.preco = preco;
 	}
-	public void setIdProdutos(int idProdutos) {
-		this.idProdutos = idProdutos;
+	
+	public int getCodProdutos() {
+		return codProdutos;
 	}
-	public int getIdCategoria() {
-		return idCategoria;
+	
+	public void setCodProdutos(int codProdutos) {
+		this.codProdutos = codProdutos;
 	}
-	public void setIdCategoria(int idCategoria) {
-		this.idCategoria = idCategoria;
+	
+	public int getCodCategoria() {
+		return codCategoria;
 	}
+
+	public void setCodCategoria(int codProdutos) {
+		this.codCategoria = codProdutos;
+	}
+	
 	public String getDescricao() {
 		return descricao;
 	}
+	
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+
 	public float getPreco() {
 		return preco;
 	}
+
 	public void setPreco(float preco) {
 		this.preco = preco;
 	}
