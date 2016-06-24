@@ -8,27 +8,39 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import dao.ComandaDAO;
 import javax.swing.border.BevelBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JTextField;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 
-public class FrmComandas {
+public class FrmComandas extends ComandaDAO {
 
 	private JFrame formComandas;
 	private JScrollPane scrollComanda;
 	private JTable tabelaComandas;
-	private JTable tabelaItensComanda;
+	private static JTable tabelaItensComanda;
 	private JScrollPane scrollItensComanda;
 	private JLabel lblNewLabel;
 	private JTextField txtValorTotal;
-	private JLabel lblComanda;
-	private JTextField txtComanda;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
+		/*
+		tabelaItensComanda.getColumnModel().getColumn(0).setCellRenderer(new adicionarIcone((NewJFrame.class.getResource("/image/xis.png")).toString()));
+        DefaultTableModel modelo = (DefaultTableModel) tabelaItensComanda.getModel();
+        modelo.addRow(new Object[]{null, "Descricao"});        
+        */
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -39,7 +51,7 @@ public class FrmComandas {
 				}
 			}
 		});
-		
+
 	}
 
 	/**
@@ -54,29 +66,31 @@ public class FrmComandas {
 	 */
 	private void initialize() {
 		formComandas = new JFrame();
-		formComandas.setBounds(100, 100, 922, 631);
+		formComandas.getContentPane().setBackground(Color.WHITE);
+		formComandas.setTitle("BAR DO BUG\u00C3O");
+		formComandas.setBounds(100, 100, 904, 649);
 		formComandas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		formComandas.getContentPane().setLayout(null);
-		
-		//Criando o Scroll e colocando a tabela dentro
+
+		// Criando o Scroll e colocando a tabela dentro
 		tabelaComandas = new JTable(0, 0);
 		tabelaComandas.setBounds(50, 50, 50, 50);
 		tabelaComandas.setSurrendersFocusOnKeystroke(true);
-		tabelaComandas.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Comanda", "Nome", "Status"}) {
+		tabelaComandas.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Comanda", "Nome", "Status","Data" }) {
 			public boolean isCellEditable(int row, int col) {
 				return false;
 			}
 		});
 		scrollComanda = new JScrollPane(tabelaComandas);
 		scrollComanda.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		scrollComanda.setBounds(10, 105, 307, 437);
+		scrollComanda.setBounds(10, 144, 307, 442);
 		formComandas.getContentPane().add(scrollComanda);
-		
-		
+
 		tabelaItensComanda = new JTable(0, 0);
 		tabelaItensComanda.setBounds(50, 50, 50, 50);
 		tabelaItensComanda.setSurrendersFocusOnKeystroke(true);
-		tabelaItensComanda.setModel(new DefaultTableModel(new Object[][] {}, new String[] {"Cliente", "Produto","Categoria","Observação","Preco"}) {
+		tabelaItensComanda.setModel(new DefaultTableModel(new Object[][] {},
+				new String[] { "Cliente", "Produto", "Categoria", "Observação", "Preco" }) {
 			public boolean isCellEditable(int row, int col) {
 				return false;
 			}
@@ -86,39 +100,80 @@ public class FrmComandas {
 		scrollComanda.setBounds(10, 25, 307, 437);
 		scrollItensComanda = new JScrollPane(tabelaItensComanda);
 		scrollItensComanda.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		scrollItensComanda.setBounds(327, 105, 556, 388);
+		scrollItensComanda.setBounds(332, 144, 556, 388);
 		formComandas.getContentPane().add(scrollItensComanda);
-		
 
-		
 		lblNewLabel = new JLabel("Valor total");
 		lblNewLabel.setForeground(Color.RED);
 		lblNewLabel.setFont(new Font("Trebuchet MS", Font.BOLD, 22));
-		lblNewLabel.setBounds(337, 506, 121, 33);
+		lblNewLabel.setBounds(337, 541, 121, 33);
 		formComandas.getContentPane().add(lblNewLabel);
-		
+
 		txtValorTotal = new JTextField();
+		txtValorTotal.setBackground(Color.WHITE);
+		txtValorTotal.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		txtValorTotal.setEditable(false);
 		txtValorTotal.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
-		txtValorTotal.setBounds(462, 503, 103, 39);
+		txtValorTotal.setBounds(451, 544, 103, 26);
 		formComandas.getContentPane().add(txtValorTotal);
 		txtValorTotal.setColumns(10);
-		
-		ComandaDAO comandaDAO = new ComandaDAO();
-		comandaDAO.teste(tabelaItensComanda,txtValorTotal);
-		
-		lblComanda = new JLabel("Comanda");
-		lblComanda.setForeground(Color.RED);
-		lblComanda.setFont(new Font("Trebuchet MS", Font.BOLD, 22));
-		lblComanda.setBounds(337, 57, 108, 33);
-		formComandas.getContentPane().add(lblComanda);
-		
-		txtComanda = new JTextField();
-		txtComanda.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
-		txtComanda.setEditable(false);
-		txtComanda.setColumns(10);
-		txtComanda.setBounds(452, 55, 150, 39);
-		formComandas.getContentPane().add(txtComanda);
 
+		JLabel lblQtdComandas = new JLabel("Comandas abertas: ");
+		lblQtdComandas.setForeground(Color.BLACK);
+		lblQtdComandas.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
+		lblQtdComandas.setBounds(10, 578, 115, 33);
+		formComandas.getContentPane().add(lblQtdComandas);
+
+		JLabel lblQuantidade = new JLabel("0");
+		lblQuantidade.setForeground(Color.BLACK);
+		lblQuantidade.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
+		lblQuantidade.setBounds(118, 581, 40, 26);
+		formComandas.getContentPane().add(lblQuantidade);
+			
+		JButton btnFecharComanda = new JButton("Fechar a conta");
+		btnFecharComanda.setEnabled(false);
+		btnFecharComanda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String numeroComanda = (String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0);
+				int confirmacao = JOptionPane.showConfirmDialog(null,"Deseja realmente fechar a conta?", "Gordão Barbearia",JOptionPane.YES_NO_OPTION);
+				if(confirmacao == JOptionPane.YES_OPTION){									
+					fecharComanda(numeroComanda, "FECHADO");
+					atualizarComandas(tabelaComandas, lblQuantidade);
+					limparTabela(tabelaItensComanda);
+					btnFecharComanda.setEnabled(false);
+				}else{
+					
+				}
+
+			}
+		});
+		btnFecharComanda.setBounds(748, 542, 131, 41);
+		formComandas.getContentPane().add(btnFecharComanda);
+
+		tabelaComandas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				// TODO Auto-generated method stub
+				DefaultTableModel model = (DefaultTableModel) tabelaComandas.getModel();
+				if (model.getRowCount() > 0) {
+					if (tabelaComandas.getSelectedRow() >= 0) {
+						String numeroComanda = (String) tabelaComandas.getModel()
+								.getValueAt(tabelaComandas.getSelectedRow(), 0);
+						atualizarItensComanda(tabelaItensComanda, txtValorTotal, numeroComanda);
+						btnFecharComanda.setEnabled(true);
+					}
+				}
+			}
+		});
+
+		atualizarComandas(tabelaComandas, lblQuantidade);
+		getNewRenderedTable(tabelaComandas);
+		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon(FrmComandas.class.getResource("/imagens/logoNovo350.png")));
+		label.setForeground(Color.BLACK);
+		label.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
+		label.setBounds(259, -4, 350, 155);
+		formComandas.getContentPane().add(label);
 	}
 }
