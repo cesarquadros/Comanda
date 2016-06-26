@@ -21,6 +21,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
+import javax.swing.ListSelectionModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class FrmComandas extends ComandaDAO {
 
@@ -68,12 +71,13 @@ public class FrmComandas extends ComandaDAO {
 		formComandas = new JFrame();
 		formComandas.getContentPane().setBackground(Color.WHITE);
 		formComandas.setTitle("BAR DO BUG\u00C3O");
-		formComandas.setBounds(100, 100, 904, 649);
+		formComandas.setBounds(100, 100, 917, 649);
 		formComandas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		formComandas.getContentPane().setLayout(null);
 
 		// Criando o Scroll e colocando a tabela dentro
 		tabelaComandas = new JTable(0, 0);
+		tabelaComandas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tabelaComandas.setBounds(50, 50, 50, 50);
 		tabelaComandas.setSurrendersFocusOnKeystroke(true);
 		tabelaComandas.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Comanda", "Nome", "Status","Data" }) {
@@ -87,14 +91,36 @@ public class FrmComandas extends ComandaDAO {
 		formComandas.getContentPane().add(scrollComanda);
 
 		tabelaItensComanda = new JTable(0, 0);
+		tabelaItensComanda.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent clique) {
+				
+				if(clique.getClickCount()==2){
+					String numeroComanda = (String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0);
+					int confirmacao = JOptionPane.showConfirmDialog(null,"Deseja excluir esse item?", "Gordão Barbearia",JOptionPane.YES_NO_OPTION);
+					if(confirmacao == JOptionPane.YES_OPTION){									
+						System.out.println("TESTE");
+					}
+				}
+				
+			}
+		});
+		tabelaItensComanda.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tabelaItensComanda.setBounds(50, 50, 50, 50);
 		tabelaItensComanda.setSurrendersFocusOnKeystroke(true);
 		tabelaItensComanda.setModel(new DefaultTableModel(new Object[][] {},
-				new String[] { "Cliente", "Produto", "Categoria", "Observação", "Preco" }) {
+				new String[] { "Cliente", "Produto", "Categoria", "Observação", "Preco","" }) {
 			public boolean isCellEditable(int row, int col) {
 				return false;
 			}
 		});
+		
+		// Bloqueia a rendenização das tabelas
+		tabelaItensComanda.getTableHeader().setResizingAllowed(false);
+		// Bloqueia a reordenação das tabelas
+		tabelaItensComanda.getTableHeader().setReorderingAllowed(false);
+		tabelaItensComanda.getColumnModel().getColumn(5).setPreferredWidth(2);
+		
 		scrollComanda = new JScrollPane(tabelaItensComanda);
 		scrollComanda.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		scrollComanda.setBounds(10, 25, 307, 437);
@@ -137,7 +163,7 @@ public class FrmComandas extends ComandaDAO {
 				String numeroComanda = (String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0);
 				int confirmacao = JOptionPane.showConfirmDialog(null,"Deseja realmente fechar a conta?", "Gordão Barbearia",JOptionPane.YES_NO_OPTION);
 				if(confirmacao == JOptionPane.YES_OPTION){									
-					fecharComanda(numeroComanda, "FECHADO");
+					fecharComanda(numeroComanda, "ABERTO");
 					atualizarComandas(tabelaComandas, lblQuantidade);
 					limparTabela(tabelaItensComanda);
 					btnFecharComanda.setEnabled(false);
@@ -161,6 +187,11 @@ public class FrmComandas extends ComandaDAO {
 								.getValueAt(tabelaComandas.getSelectedRow(), 0);
 						atualizarItensComanda(tabelaItensComanda, txtValorTotal, numeroComanda);
 						btnFecharComanda.setEnabled(true);
+						
+						tabelaItensComanda.getColumnModel().getColumn(5).setCellRenderer(new adicionarIcone((FrmComandas.class.getResource("/imagens/excluir.png")).toString()));
+				        DefaultTableModel modelo = (DefaultTableModel) tabelaItensComanda.getModel();
+     
+				       
 					}
 				}
 			}
@@ -173,7 +204,7 @@ public class FrmComandas extends ComandaDAO {
 		label.setIcon(new ImageIcon(FrmComandas.class.getResource("/imagens/logoNovo350.png")));
 		label.setForeground(Color.BLACK);
 		label.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
-		label.setBounds(259, -4, 350, 155);
+		label.setBounds(269, -7, 350, 155);
 		formComandas.getContentPane().add(label);
 	}
 }
