@@ -19,15 +19,17 @@ public class ComandaDAO extends Conexao {
 	private Connection con;
 	private Statement statement;
 	private ResultSet rs;
+	private String sql;
 
-	public void atualizarItensComanda(JTable tabelaItensComanda, JTextField txtValorTotal, String numeroComanda) {
+	public float atualizarItensComanda(JTable tabelaItensComanda, int numeroComanda) {
 		DefaultTableModel model = (DefaultTableModel) tabelaItensComanda.getModel();
-		DecimalFormat df = new DecimalFormat("00.00");
+		DecimalFormat df = new DecimalFormat("0.00");
+		float valorTotal = 0;
 		try {
 			con = abreConexao();
 			statement = con.createStatement();
 
-			String sql = "SELECT C.NOME_CLIENTE AS CLIENTE, P.DESCRICAO AS PRODUTOS, P.OBSERVACOES, CA.CATEGORIA, P.PRECO"
+			String sql = "SELECT C.NOME_CLIENTE AS CLIENTE, P.DESCRICAO AS PRODUTOS, P.OBSERVACOES, CA.CATEGORIA, P.PRECO, I.COD_ITEM"
 					+ " FROM ITENS_COMANDA I" + " INNER JOIN COMANDA C ON C.COD_COMANDA = I.COD_COMANDA"
 					+ " INNER JOIN PRODUTOS P ON P.COD_PRODUTO = I.COD_PRODUTO"
 					+ " INNER JOIN CATEGORIAS CA ON CA.COD_CATEGORIA = P.COD_CATEGORIA" + " WHERE I.COD_COMANDA='"
@@ -36,18 +38,20 @@ public class ComandaDAO extends Conexao {
 			rs = statement.executeQuery(sql);
 
 			limparTabela(tabelaItensComanda);
-			float valorTotal = 0;
+			
 			while (rs.next()) {
 				model.addRow(new String[] { rs.getString(1), rs.getString(2), rs.getString(4), rs.getString(3),
-						rs.getString(5) });
+						rs.getString(5), rs.getString(6) });
 				valorTotal = valorTotal + rs.getFloat(5);
 			}
+			return valorTotal;
 
-			txtValorTotal.setText("R$" + df.format(valorTotal));
+			//txtValorTotal.setText("R$" + df.format(valorTotal));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return valorTotal;
 
 	}
 
@@ -114,5 +118,24 @@ public class ComandaDAO extends Conexao {
 		for (int i = 0; i < linhas; i++) {
 			model.removeRow(0);
 		}
+	}
+
+	public float valorAPagar(int codComanda) {
+		float valorApagar = 0;
+		try {
+			con = abreConexao();
+			statement = con.createStatement();
+			sql = "SELECT VALOR_PAGO FROM PAGAMENTOS WHERE COD_COMANDA ='" + codComanda + "'";
+			rs = statement.executeQuery(sql);
+
+			while (rs.next()) {
+				valorApagar += rs.getFloat(1);
+			}
+			return valorApagar;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return valorApagar;
 	}
 }
