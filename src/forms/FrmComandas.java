@@ -54,13 +54,7 @@ public class FrmComandas extends ComandaDAO {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		/*
-		 * tabelaItensComanda.getColumnModel().getColumn(0).setCellRenderer(new
-		 * adicionarIcone((NewJFrame.class.getResource("/image/xis.png")).
-		 * toString())); DefaultTableModel modelo = (DefaultTableModel)
-		 * tabelaItensComanda.getModel(); modelo.addRow(new Object[]{null,
-		 * "Descricao"});
-		 */
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -136,7 +130,7 @@ public class FrmComandas extends ComandaDAO {
 		scrollItensComanda.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		scrollItensComanda.setBounds(324, 186, 674, 357);
 		formComandas.getContentPane().add(scrollItensComanda);
-		
+
 		lblNewLabel_1 = new JLabel("");
 		scrollItensComanda.setColumnHeaderView(lblNewLabel_1);
 		lblNewLabel_1.setIcon(new ImageIcon(FrmComandas.class.getResource("/imagens/logoNovo350.png")));
@@ -199,139 +193,121 @@ public class FrmComandas extends ComandaDAO {
 
 		atualizarComandas(tabelaComandas, lblQuantidade);
 		getNewRenderedTable(tabelaComandas);
-		
+
 		JLabel lblFundo = new JLabel("");
 		lblFundo.setIcon(new ImageIcon(FrmComandas.class.getResource("/imagens/faixa2.png")));
 		lblFundo.setBounds(11, 0, 1015, 190);
 		formComandas.getContentPane().add(lblFundo);
-		
+
 		JPanel panel = new JPanel();
 		panel.setBounds(324, 554, 674, 109);
 		formComandas.getContentPane().add(panel);
 		panel.setLayout(null);
-				
-						lblPagar = new JLabel("\u00C0 pagar");
-						lblPagar.setBounds(493, 2, 66, 33);
-						panel.add(lblPagar);
-						lblPagar.setForeground(new Color(0, 0, 255));
-						lblPagar.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
-		
-				txtValorPago = new JTextField();
-				txtValorPago.setBounds(561, 42, 103, 26);
-				panel.add(txtValorPago);
-				txtValorPago.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
-				txtValorPago.setEditable(false);
-				txtValorPago.setColumns(10);
-				txtValorPago.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-				txtValorPago.setBackground(Color.WHITE);
-				
-						lblValorPago = new JLabel("Valor pago");
-						lblValorPago.setBounds(471, 37, 88, 33);
-						panel.add(lblValorPago);
-						lblValorPago.setForeground(new Color(0, 128, 0));
-						lblValorPago.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
-						
-								txtValorTotal = new JTextField();
-								txtValorTotal.setBounds(561, 75, 103, 26);
-								panel.add(txtValorTotal);
-								txtValorTotal.setBackground(Color.WHITE);
-								txtValorTotal.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-								txtValorTotal.setEditable(false);
-								txtValorTotal.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
-								txtValorTotal.setColumns(10);
-								
-										lblNewLabel = new JLabel("Valor total");
-										lblNewLabel.setBounds(471, 72, 88, 33);
-										panel.add(lblNewLabel);
-										lblNewLabel.setForeground(Color.RED);
-										lblNewLabel.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
-										
-												txtValorRestante = new JTextField();
-												txtValorRestante.setBounds(561, 9, 103, 26);
-												panel.add(txtValorRestante);
-												txtValorRestante.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
-												txtValorRestante.setEditable(false);
-												txtValorRestante.setColumns(10);
-												txtValorRestante.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-												txtValorRestante.setBackground(Color.WHITE);
-												
-														btnFecharComanda = new JButton("Fechar a conta");
-														btnFecharComanda.setBounds(9, 9, 131, 41);
-														panel.add(btnFecharComanda);
-														btnFecharComanda.setEnabled(false);
-														
-																btnEfetuarPagamento = new JButton("Efetuar pagamento");
-																btnEfetuarPagamento.setFont(new Font("Tahoma", Font.PLAIN, 10));
-																btnEfetuarPagamento.setBounds(7, 59, 131, 41);
-																panel.add(btnEfetuarPagamento);
-																
-																		btnEfetuarPagamento.setEnabled(false);
-																		
-																		label = new JLabel("");
-																		label.setIcon(new ImageIcon(FrmComandas.class.getResource("/imagens/logoNovo251.png")));
-																		label.setBounds(186, 0, 251, 107);
-																		panel.add(label);
-																		
-																				btnEfetuarPagamento.addActionListener(new ActionListener() {
-																					public void actionPerformed(ActionEvent arg0) {
-																					/*float valorPago = 0;
-																						String observacaoPagamento = "";
-																		
-																						while (observacaoPagamento.equals("")) {
-																							observacaoPagamento = JOptionPane.showInputDialog("Observação", null);
-																						}
-																		
-																						while (valorPago <= 0) {
-																							try {
-																								valorPago = Float.parseFloat(
-																										JOptionPane.showInputDialog("Digite o valor a ser pago", null).replaceAll(",", "."));
-																								valorPago = Float.valueOf(valorPago);
-																							} catch (NumberFormatException e) {
-																								System.out.println(e);
-																								JOptionPane.showMessageDialog(null, "Digite apenas números", "Bar do Bugão",
-																										JOptionPane.ERROR_MESSAGE);
-																							}
-																						};*/
-																						int numeroComanda = Integer
-																								.parseInt((String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
-																		
-																						
-																						boolean efetuarPagamento = pagamento.efetuarPagamentos(tabelaComandas);
-																						
-																						if(efetuarPagamento){
-																							JOptionPane.showMessageDialog(null, "Pagamento efetuado", "Bar do Bugão",
-																									JOptionPane.INFORMATION_MESSAGE);
-																							float valorTotal = atualizarItensComanda(tabelaItensComanda, numeroComanda);
-																							float valorPago = valorAPagar(numeroComanda);
-																							float valorAPagar = valorTotal - valorPago;
-																							txtValorTotal.setText("R$" + df.format(valorTotal));
-																							txtValorPago.setText("R$" + df.format(valorPago));
-																							txtValorRestante.setText("R$" + df.format(valorAPagar));
-																							
-																						}else{
-																							JOptionPane.showMessageDialog(null, "Erro ao efetuar o pagamento, tente novamente", "Bar do Bugão",
-																									JOptionPane.ERROR_MESSAGE);
-																						}
-																		
-																					}
-																				});
-														btnFecharComanda.addActionListener(new ActionListener() {
-															public void actionPerformed(ActionEvent arg0) {
-																String numeroComanda = (String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(),
-																		0);
-																int confirmacao = JOptionPane.showConfirmDialog(null, "Deseja realmente fechar a conta?",
-																		"Bar do Bugão", JOptionPane.YES_NO_OPTION);
-																if (confirmacao == JOptionPane.YES_OPTION) {
-																	fecharComanda(numeroComanda, "FECHADO");
-																	atualizarComandas(tabelaComandas, lblQuantidade);
-																	limparTabela(tabelaItensComanda);
-																	btnFecharComanda.setEnabled(false);
-																} else {
 
-																}
+		lblPagar = new JLabel("\u00C0 pagar");
+		lblPagar.setBounds(493, 2, 66, 33);
+		panel.add(lblPagar);
+		lblPagar.setForeground(new Color(0, 0, 255));
+		lblPagar.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
 
-															}
-														});
+		txtValorPago = new JTextField();
+		txtValorPago.setBounds(561, 42, 103, 26);
+		panel.add(txtValorPago);
+		txtValorPago.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
+		txtValorPago.setEditable(false);
+		txtValorPago.setColumns(10);
+		txtValorPago.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		txtValorPago.setBackground(Color.WHITE);
+
+		lblValorPago = new JLabel("Valor pago");
+		lblValorPago.setBounds(471, 37, 88, 33);
+		panel.add(lblValorPago);
+		lblValorPago.setForeground(new Color(0, 128, 0));
+		lblValorPago.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
+
+		txtValorTotal = new JTextField();
+		txtValorTotal.setBounds(561, 75, 103, 26);
+		panel.add(txtValorTotal);
+		txtValorTotal.setBackground(Color.WHITE);
+		txtValorTotal.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		txtValorTotal.setEditable(false);
+		txtValorTotal.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
+		txtValorTotal.setColumns(10);
+
+		lblNewLabel = new JLabel("Valor total");
+		lblNewLabel.setBounds(471, 72, 88, 33);
+		panel.add(lblNewLabel);
+		lblNewLabel.setForeground(Color.RED);
+		lblNewLabel.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
+
+		txtValorRestante = new JTextField();
+		txtValorRestante.setBounds(561, 9, 103, 26);
+		panel.add(txtValorRestante);
+		txtValorRestante.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
+		txtValorRestante.setEditable(false);
+		txtValorRestante.setColumns(10);
+		txtValorRestante.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		txtValorRestante.setBackground(Color.WHITE);
+
+		btnFecharComanda = new JButton("Fechar a conta");
+		btnFecharComanda.setBounds(9, 9, 131, 41);
+		panel.add(btnFecharComanda);
+		btnFecharComanda.setEnabled(false);
+
+		btnEfetuarPagamento = new JButton("Efetuar pagamento");
+		btnEfetuarPagamento.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnEfetuarPagamento.setBounds(7, 59, 131, 41);
+		panel.add(btnEfetuarPagamento);
+
+		btnEfetuarPagamento.setEnabled(false);
+
+		label = new JLabel("");
+		label.setIcon(new ImageIcon(FrmComandas.class.getResource("/imagens/logoNovo251.png")));
+		label.setBounds(186, 0, 251, 107);
+		panel.add(label);
+
+		btnEfetuarPagamento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				int numeroComanda = Integer
+						.parseInt((String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
+
+				boolean efetuarPagamento = pagamento.efetuarPagamentos(tabelaComandas);
+
+				if (efetuarPagamento) {
+					JOptionPane.showMessageDialog(null, "Pagamento efetuado", "Bar do Bugão",
+							JOptionPane.INFORMATION_MESSAGE);
+					float valorTotal = atualizarItensComanda(tabelaItensComanda, numeroComanda);
+					float valorPago = valorAPagar(numeroComanda);
+					float valorAPagar = valorTotal - valorPago;
+					txtValorTotal.setText("R$" + df.format(valorTotal));
+					txtValorPago.setText("R$" + df.format(valorPago));
+					txtValorRestante.setText("R$" + df.format(valorAPagar));
+
+				} else {
+					JOptionPane.showMessageDialog(null, "Erro ao efetuar o pagamento, tente novamente", "Bar do Bugão",
+							JOptionPane.ERROR_MESSAGE);
+				}
+
+			}
+		});
+		btnFecharComanda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String numeroComanda = (String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(),
+						0);
+				int confirmacao = JOptionPane.showConfirmDialog(null, "Deseja realmente fechar a conta?",
+						"Bar do Bugão", JOptionPane.YES_NO_OPTION);
+				if (confirmacao == JOptionPane.YES_OPTION) {
+					fecharComanda(numeroComanda, "FECHADO");
+					atualizarComandas(tabelaComandas, lblQuantidade);
+					limparTabela(tabelaItensComanda);
+					btnFecharComanda.setEnabled(false);
+				} else {
+
+				}
+
+			}
+		});
 
 	}
 }
