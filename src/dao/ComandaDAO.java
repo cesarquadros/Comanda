@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import dao.Conexao;
+import model.Pagamento;
 
 public class ComandaDAO extends Conexao {
 	private Connection con;
@@ -138,4 +139,24 @@ public class ComandaDAO extends Conexao {
 		}
 		return valorApagar;
 	}
+	
+	public boolean efetuarPagamento(Pagamento pagamento){
+		
+		try {
+			con = abreConexao();
+			statement = con.createStatement();
+			
+			sql = "INSERT INTO PAGAMENTOS(COD_COMANDA, PAG_OBSERVACOES, VALOR_PAGO)"
+					+ "VALUES('"+pagamento.getCodComandao()+"','"+pagamento.getObservacaoPagamento()+"','"+pagamento.getValorPagamento()+"')";
+			statement.executeUpdate(sql);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return true;
+	}
+
 }

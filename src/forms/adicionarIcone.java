@@ -8,7 +8,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableCellRenderer;
 
-class adicionarIcone implements TableCellRenderer {
+public class adicionarIcone implements TableCellRenderer {
 	private String pathIcone;
 	JLabel label = new JLabel();
 	ImageIcon icone;
