@@ -75,6 +75,7 @@ public class FrmComandas extends ComandaDAO {
 		initialize();
 	}
 
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -266,7 +267,7 @@ public class FrmComandas extends ComandaDAO {
 		label.setBounds(186, 0, 251, 107);
 		panel.add(label);
 
-<<<<<<< HEAD
+
 		JButton btnAtualizarComanda = new JButton("Atualizar");
 		btnAtualizarComanda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -279,30 +280,11 @@ public class FrmComandas extends ComandaDAO {
 		btnAtualizarComanda.setBounds(84, 622, 131, 41);
 		formComandas.getContentPane().add(btnAtualizarComanda);
 
+		
 		btnEfetuarPagamento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				/*
-				 * float valorPago = 0; String observacaoPagamento = "";
-				 * 
-				 * while (observacaoPagamento.equals("")) { observacaoPagamento
-				 * = JOptionPane.showInputDialog("Observação", null); }
-				 * 
-				 * while (valorPago <= 0) { try { valorPago = Float.parseFloat(
-				 * JOptionPane.showInputDialog("Digite o valor a ser pago",
-				 * null).replaceAll(",", ".")); valorPago =
-				 * Float.valueOf(valorPago); } catch (NumberFormatException e) {
-				 * System.out.println(e); JOptionPane.showMessageDialog(null,
-				 * "Digite apenas números", "Bar do Bugão",
-				 * JOptionPane.ERROR_MESSAGE); } };
-				 */
-=======
-		btnEfetuarPagamento.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-
->>>>>>> 6031bd8761729046832153bae40572deebde4dfa
 				int numeroComanda = Integer
 						.parseInt((String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
-
 				boolean efetuarPagamento = pagamento.efetuarPagamentos(tabelaComandas);
 
 				if (efetuarPagamento) {
@@ -330,7 +312,8 @@ public class FrmComandas extends ComandaDAO {
 						"Bar do Bugão", JOptionPane.YES_NO_OPTION);
 				if (confirmacao == JOptionPane.YES_OPTION) {
 					fecharComanda(numeroComanda, "FECHADO");
-					atualizarComandas(tabelaComandas, lblQuantidade);
+					atualizarComandas(
+							tabelaComandas, lblQuantidade);
 					limparTabela(tabelaItensComanda);
 					btnFecharComanda.setEnabled(false);
 				} else {
@@ -339,6 +322,5 @@ public class FrmComandas extends ComandaDAO {
 
 			}
 		});
-
-	}
+	}		
 }

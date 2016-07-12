@@ -39,7 +39,8 @@ public class Pagamento extends ComandaDAO {
 	}
 	
 	public boolean efetuarPagamentos(JTable tabelaComandas){
-
+		valorPagamento = 0;
+		observacaoPagamento ="";
 
 		while (observacaoPagamento.equals("")) {
 			observacaoPagamento = JOptionPane.showInputDialog("Observação", null);
