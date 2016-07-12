@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -30,7 +31,7 @@ public class ComandaDAO extends Conexao {
 			con = abreConexao();
 			statement = con.createStatement();
 
-			String sql = "SELECT C.NOME_CLIENTE AS CLIENTE, P.DESCRICAO AS PRODUTOS, P.OBSERVACOES, CA.CATEGORIA, P.PRECO, I.COD_ITEM"
+			sql = "SELECT C.NOME_CLIENTE AS CLIENTE, P.DESCRICAO AS PRODUTOS, P.OBSERVACOES, CA.CATEGORIA, P.PRECO, I.COD_ITEM"
 					+ " FROM ITENS_COMANDA I" + " INNER JOIN COMANDA C ON C.COD_COMANDA = I.COD_COMANDA"
 					+ " INNER JOIN PRODUTOS P ON P.COD_PRODUTO = I.COD_PRODUTO"
 					+ " INNER JOIN CATEGORIAS CA ON CA.COD_CATEGORIA = P.COD_CATEGORIA" + " WHERE I.COD_COMANDA='"
@@ -42,7 +43,7 @@ public class ComandaDAO extends Conexao {
 			
 			while (rs.next()) {
 				model.addRow(new String[] { rs.getString(1), rs.getString(2), rs.getString(4), rs.getString(3),
-						rs.getString(5), rs.getString(6) });
+						"R$"+rs.getString(5), rs.getString(6) });
 				valorTotal = valorTotal + rs.getFloat(5);
 			}
 			return valorTotal;
@@ -159,4 +160,35 @@ public class ComandaDAO extends Conexao {
 		return true;
 	}
 
+	public void comprovante(JTextArea textCompro, int numeroComanda){
+		DecimalFormat df = new DecimalFormat("0.00");
+		try {
+			con = abreConexao();
+			statement = con.createStatement();
+			
+			sql = "SELECT"+
+					" P.DESCRICAO,P.PRECO, COUNT(*) AS CONT"+
+					" FROM " + 
+					" ITENS_COMANDA IC, PRODUTOS P, CATEGORIAS CA"+
+					" WHERE"+ 
+					" P.COD_PRODUTO = IC.COD_PRODUTO"+ 
+					" AND"+ 
+					" P.COD_CATEGORIA = CA.COD_CATEGORIA"+
+					" AND"+
+					" IC.COD_COMANDA = '"+numeroComanda+"'"+
+					" GROUP BY"+ 
+					" P.DESCRICAO, P.PRECO";			
+			rs = statement.executeQuery(sql);
+			textCompro.setText(null);
+			while(rs.next()){
+				textCompro.setText(textCompro.getText() + rs.getString(1) + "   x"+ rs.getInt(3)+ "   R$"+ df.format(rs.getFloat(2)* rs.getInt(3))+ System.lineSeparator());
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
 }

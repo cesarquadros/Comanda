@@ -12,7 +12,6 @@ public class ItemComandaDAO extends Conexao{
 	private String sql;
 	
 	public boolean excluirItemComanda(int codItem){
-		
 		try {
 			con = abreConexao();
 			statement = con.createStatement();

@@ -16,6 +16,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
+import java.awt.TextArea;
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -27,12 +28,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.JTextArea;
+import java.awt.Component;
 
 public class FrmComandas extends ComandaDAO {
 
 	private JFrame formComandas;
 	private JScrollPane scrollComanda;
 	private JTable tabelaComandas;
+	private JTextArea textCompro;
 	private static JTable tabelaItensComanda;
 	private JScrollPane scrollItensComanda;
 	private JLabel lblNewLabel;
@@ -75,7 +80,6 @@ public class FrmComandas extends ComandaDAO {
 		initialize();
 	}
 
-
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -84,9 +88,19 @@ public class FrmComandas extends ComandaDAO {
 		formComandas.setResizable(false);
 		formComandas.getContentPane().setBackground(Color.WHITE);
 		formComandas.setTitle("BAR DO BUG\u00C3O");
-		formComandas.setBounds(100, 100, 1015, 702);
+		formComandas.setBounds(100, 100, 1274, 702);
 		formComandas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		formComandas.getContentPane().setLayout(null);
+		
+		JScrollPane scrollComprovante = new JScrollPane(textCompro);
+		scrollComprovante.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		scrollComprovante.setBounds(1008, 186, 196, 357);
+		formComandas.getContentPane().add(scrollComprovante);
+		
+		textCompro = new JTextArea();
+		scrollComprovante.setViewportView(textCompro);
+		textCompro.setBounds(0, 0, 4, 22);
+		//formComandas.getContentPane().add(textArea);
 
 		// Criando o Scroll e colocando a tabela dentro
 		tabelaComandas = new JTable(0, 0);
@@ -118,11 +132,16 @@ public class FrmComandas extends ComandaDAO {
 		// Bloqueia a rendenização das tabelas
 		tabelaItensComanda.getTableHeader().setResizingAllowed(false);
 		// Bloqueia a reordenação das tabelas
+		tabelaItensComanda.getColumnModel().getColumn(0).setPreferredWidth(40);
 		tabelaItensComanda.getTableHeader().setReorderingAllowed(false);
-		tabelaItensComanda.getColumnModel().getColumn(6).setPreferredWidth(2);
+		tabelaItensComanda.getColumnModel().getColumn(3).setPreferredWidth(35);
+		tabelaItensComanda.getColumnModel().getColumn(4).setPreferredWidth(30);
 		tabelaItensComanda.getColumnModel().getColumn(5).setMaxWidth(0);
 		tabelaItensComanda.getColumnModel().getColumn(5).setMinWidth(0);
 		tabelaItensComanda.getTableHeader().getColumnModel().getColumn(5).setMaxWidth(0);
+		tabelaItensComanda.getColumnModel().getColumn(6).setMaxWidth(20);
+		tabelaItensComanda.getColumnModel().getColumn(6).setMinWidth(20);
+
 
 		scrollComanda = new JScrollPane(tabelaItensComanda);
 		scrollComanda.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -148,53 +167,6 @@ public class FrmComandas extends ComandaDAO {
 		lblQuantidade.setBounds(115, 161, 40, 26);
 		formComandas.getContentPane().add(lblQuantidade);
 
-		tabelaComandas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				// TODO Auto-generated method stub
-				DefaultTableModel model = (DefaultTableModel) tabelaComandas.getModel();
-
-				if (model.getRowCount() > 0) {
-					if (tabelaComandas.getSelectedRow() >= 0) {
-						int numeroComanda = Integer.parseInt(
-								(String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
-						float valorTotal = atualizarItensComanda(tabelaItensComanda, numeroComanda);
-						float valorPago = valorAPagar(numeroComanda);
-						float valorAPagar = valorTotal - valorPago;
-						txtValorTotal.setText("R$" + df.format(valorTotal));
-						txtValorPago.setText("R$" + df.format(valorPago));
-						txtValorRestante.setText("R$" + df.format(valorAPagar));
-						btnFecharComanda.setEnabled(true);
-						btnEfetuarPagamento.setEnabled(true);
-						tabelaItensComanda.getColumnModel().getColumn(6).setCellRenderer(
-								new adicionarIcone((FrmComandas.class.getResource("/imagens/excluir.png")).toString()));
-
-					}
-				}
-			}
-		});
-
-		tabelaItensComanda.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent clique) {
-				if (clique.getClickCount() == 2) {
-
-					itemComanda.excluirItemComanda(tabelaItensComanda);
-					int numeroComanda = Integer.parseInt(
-							(String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
-					float valorTotal = atualizarItensComanda(tabelaItensComanda, numeroComanda);
-					float valorPago = valorAPagar(numeroComanda);
-					float valorAPagar = valorTotal - valorPago;
-					txtValorTotal.setText("R$" + df.format(valorTotal));
-					txtValorPago.setText("R$" + df.format(valorPago));
-					txtValorRestante.setText("R$" + df.format(valorAPagar));
-				}
-			}
-		});
-
-		atualizarComandas(tabelaComandas, lblQuantidade);
-		getNewRenderedTable(tabelaComandas);
-
 		JLabel lblFundo = new JLabel("");
 		lblFundo.setIcon(new ImageIcon(FrmComandas.class.getResource("/imagens/faixa2.png")));
 		lblFundo.setBounds(11, 0, 1015, 190);
@@ -212,6 +184,7 @@ public class FrmComandas extends ComandaDAO {
 		lblPagar.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
 
 		txtValorPago = new JTextField();
+		txtValorPago.setText("R$0,00");
 		txtValorPago.setBounds(561, 42, 103, 26);
 		panel.add(txtValorPago);
 		txtValorPago.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
@@ -227,6 +200,7 @@ public class FrmComandas extends ComandaDAO {
 		lblValorPago.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
 
 		txtValorTotal = new JTextField();
+		txtValorTotal.setText("R$0,00");
 		txtValorTotal.setBounds(561, 75, 103, 26);
 		panel.add(txtValorTotal);
 		txtValorTotal.setBackground(Color.WHITE);
@@ -242,6 +216,7 @@ public class FrmComandas extends ComandaDAO {
 		lblNewLabel.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
 
 		txtValorRestante = new JTextField();
+		txtValorRestante.setText("R$0,00");
 		txtValorRestante.setBounds(561, 9, 103, 26);
 		panel.add(txtValorRestante);
 		txtValorRestante.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
@@ -267,20 +242,68 @@ public class FrmComandas extends ComandaDAO {
 		label.setBounds(186, 0, 251, 107);
 		panel.add(label);
 
-
 		JButton btnAtualizarComanda = new JButton("Atualizar");
-		btnAtualizarComanda.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				atualizarComandas(tabelaComandas, lblQuantidade);
-				getNewRenderedTable(tabelaComandas);
-			}
-		});
 		btnAtualizarComanda.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnAtualizarComanda.setBounds(84, 622, 131, 41);
 		formComandas.getContentPane().add(btnAtualizarComanda);
 
-		
+		atualizarComandas(tabelaComandas, lblQuantidade);
+		getNewRenderedTable(tabelaComandas);
+
+		tabelaComandas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				// TODO Auto-generated method stub
+				DefaultTableModel model = (DefaultTableModel) tabelaComandas.getModel();
+				if (model.getRowCount() > 0) {
+					if (tabelaComandas.getSelectedRow() >= 0) {						
+						int numeroComanda = Integer.parseInt(
+								(String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
+						comprovante(textCompro,numeroComanda);
+						float valorTotal = atualizarItensComanda(tabelaItensComanda, numeroComanda);
+						float valorPago = valorAPagar(numeroComanda);
+						float valorAPagar = valorTotal - valorPago;
+						txtValorTotal.setText("R$" + df.format(valorTotal));
+						txtValorPago.setText("R$" + df.format(valorPago));
+						txtValorRestante.setText("R$" + df.format(valorAPagar));
+						btnFecharComanda.setEnabled(true);
+						btnEfetuarPagamento.setEnabled(true);
+						tabelaItensComanda.getColumnModel().getColumn(6).setCellRenderer(
+								new adicionarIcone((FrmComandas.class.getResource("/imagens/excluir.png")).toString()));
+
+					}
+				}
+			}
+		});
+		btnAtualizarComanda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				atualizarComandas(tabelaComandas, lblQuantidade);
+				getNewRenderedTable(tabelaComandas);
+
+				txtValorTotal.setText("R$" + df.format(0.00));
+				txtValorPago.setText("R$" + df.format(0.00));
+				txtValorRestante.setText("R$" + df.format(0.00));
+				limparTabela(tabelaItensComanda);
+
+			}
+		});
+		tabelaItensComanda.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent clique) {
+				if (clique.getClickCount() == 2) {
+
+					itemComanda.excluirItemComanda(tabelaItensComanda);
+					int numeroComanda = Integer.parseInt(
+							(String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
+					float valorTotal = atualizarItensComanda(tabelaItensComanda, numeroComanda);
+					float valorPago = valorAPagar(numeroComanda);
+					float valorAPagar = valorTotal - valorPago;
+					txtValorTotal.setText("R$" + df.format(valorTotal));
+					txtValorPago.setText("R$" + df.format(valorPago));
+					txtValorRestante.setText("R$" + df.format(valorAPagar));
+				}
+			}
+		});
 		btnEfetuarPagamento.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int numeroComanda = Integer
@@ -312,15 +335,13 @@ public class FrmComandas extends ComandaDAO {
 						"Bar do Bugão", JOptionPane.YES_NO_OPTION);
 				if (confirmacao == JOptionPane.YES_OPTION) {
 					fecharComanda(numeroComanda, "FECHADO");
-					atualizarComandas(
-							tabelaComandas, lblQuantidade);
+					atualizarComandas(tabelaComandas, lblQuantidade);
 					limparTabela(tabelaItensComanda);
 					btnFecharComanda.setEnabled(false);
 				} else {
 
 				}
-
 			}
 		});
-	}		
+	}
 }
