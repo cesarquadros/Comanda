@@ -88,16 +88,18 @@ public class FrmComandas extends ComandaDAO {
 		formComandas.setResizable(false);
 		formComandas.getContentPane().setBackground(Color.WHITE);
 		formComandas.setTitle("BAR DO BUG\u00C3O");
-		formComandas.setBounds(100, 100, 1274, 702);
+		formComandas.setBounds(100, 100, 1262, 702);
 		formComandas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		formComandas.getContentPane().setLayout(null);
 		
 		JScrollPane scrollComprovante = new JScrollPane(textCompro);
 		scrollComprovante.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		scrollComprovante.setBounds(1008, 186, 196, 357);
+		scrollComprovante.setBounds(1008, 186, 238, 357);
 		formComandas.getContentPane().add(scrollComprovante);
 		
 		textCompro = new JTextArea();
+		textCompro.setEditable(false);
+		textCompro.setFont(new Font("Trebuchet MS", Font.PLAIN, 13));
 		scrollComprovante.setViewportView(textCompro);
 		textCompro.setBounds(0, 0, 4, 22);
 		//formComandas.getContentPane().add(textArea);
@@ -169,23 +171,23 @@ public class FrmComandas extends ComandaDAO {
 
 		JLabel lblFundo = new JLabel("");
 		lblFundo.setIcon(new ImageIcon(FrmComandas.class.getResource("/imagens/faixa2.png")));
-		lblFundo.setBounds(11, 0, 1015, 190);
+		lblFundo.setBounds(130, 0, 991, 190);
 		formComandas.getContentPane().add(lblFundo);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(324, 554, 674, 109);
+		panel.setBounds(324, 554, 922, 109);
 		formComandas.getContentPane().add(panel);
 		panel.setLayout(null);
 
-		lblPagar = new JLabel("\u00C0 pagar");
-		lblPagar.setBounds(493, 2, 66, 33);
+		lblPagar = new JLabel("A pagar");
+		lblPagar.setBounds(739, 2, 66, 33);
 		panel.add(lblPagar);
 		lblPagar.setForeground(new Color(0, 0, 255));
 		lblPagar.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
 
 		txtValorPago = new JTextField();
 		txtValorPago.setText("R$0,00");
-		txtValorPago.setBounds(561, 42, 103, 26);
+		txtValorPago.setBounds(807, 42, 103, 26);
 		panel.add(txtValorPago);
 		txtValorPago.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
 		txtValorPago.setEditable(false);
@@ -194,14 +196,14 @@ public class FrmComandas extends ComandaDAO {
 		txtValorPago.setBackground(Color.WHITE);
 
 		lblValorPago = new JLabel("Valor pago");
-		lblValorPago.setBounds(471, 37, 88, 33);
+		lblValorPago.setBounds(717, 37, 88, 33);
 		panel.add(lblValorPago);
 		lblValorPago.setForeground(new Color(0, 128, 0));
 		lblValorPago.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
 
 		txtValorTotal = new JTextField();
 		txtValorTotal.setText("R$0,00");
-		txtValorTotal.setBounds(561, 75, 103, 26);
+		txtValorTotal.setBounds(807, 75, 103, 26);
 		panel.add(txtValorTotal);
 		txtValorTotal.setBackground(Color.WHITE);
 		txtValorTotal.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -210,14 +212,14 @@ public class FrmComandas extends ComandaDAO {
 		txtValorTotal.setColumns(10);
 
 		lblNewLabel = new JLabel("Valor total");
-		lblNewLabel.setBounds(471, 72, 88, 33);
+		lblNewLabel.setBounds(717, 72, 88, 33);
 		panel.add(lblNewLabel);
 		lblNewLabel.setForeground(Color.RED);
 		lblNewLabel.setFont(new Font("Trebuchet MS", Font.BOLD, 16));
 
 		txtValorRestante = new JTextField();
 		txtValorRestante.setText("R$0,00");
-		txtValorRestante.setBounds(561, 9, 103, 26);
+		txtValorRestante.setBounds(807, 9, 103, 26);
 		panel.add(txtValorRestante);
 		txtValorRestante.setFont(new Font("Trebuchet MS", Font.BOLD, 18));
 		txtValorRestante.setEditable(false);
@@ -226,12 +228,13 @@ public class FrmComandas extends ComandaDAO {
 		txtValorRestante.setBackground(Color.WHITE);
 
 		btnFecharComanda = new JButton("Fechar a conta");
+		btnFecharComanda.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnFecharComanda.setBounds(9, 9, 131, 41);
 		panel.add(btnFecharComanda);
 		btnFecharComanda.setEnabled(false);
 
 		btnEfetuarPagamento = new JButton("Efetuar pagamento");
-		btnEfetuarPagamento.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnEfetuarPagamento.setFont(new Font("Tahoma", Font.BOLD, 10));
 		btnEfetuarPagamento.setBounds(7, 59, 131, 41);
 		panel.add(btnEfetuarPagamento);
 
@@ -239,11 +242,11 @@ public class FrmComandas extends ComandaDAO {
 
 		label = new JLabel("");
 		label.setIcon(new ImageIcon(FrmComandas.class.getResource("/imagens/logoNovo251.png")));
-		label.setBounds(186, 0, 251, 107);
+		label.setBounds(332, 0, 251, 107);
 		panel.add(label);
 
 		JButton btnAtualizarComanda = new JButton("Atualizar");
-		btnAtualizarComanda.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnAtualizarComanda.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnAtualizarComanda.setBounds(84, 622, 131, 41);
 		formComandas.getContentPane().add(btnAtualizarComanda);
 
@@ -256,13 +259,17 @@ public class FrmComandas extends ComandaDAO {
 				// TODO Auto-generated method stub
 				DefaultTableModel model = (DefaultTableModel) tabelaComandas.getModel();
 				if (model.getRowCount() > 0) {
-					if (tabelaComandas.getSelectedRow() >= 0) {						
+					if (tabelaComandas.getSelectedRow() >= 0) {
+						
 						int numeroComanda = Integer.parseInt(
 								(String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
-						comprovante(textCompro,numeroComanda);
+						
 						float valorTotal = atualizarItensComanda(tabelaItensComanda, numeroComanda);
 						float valorPago = valorAPagar(numeroComanda);
 						float valorAPagar = valorTotal - valorPago;
+						comprovante(textCompro,numeroComanda);
+						textCompro.setText(textCompro.getText()+" VALOR A PAGAR R$" + df.format(valorAPagar));
+						textCompro.setText(textCompro.getText() +System.lineSeparator());
 						txtValorTotal.setText("R$" + df.format(valorTotal));
 						txtValorPago.setText("R$" + df.format(valorPago));
 						txtValorRestante.setText("R$" + df.format(valorAPagar));
@@ -284,6 +291,7 @@ public class FrmComandas extends ComandaDAO {
 				txtValorPago.setText("R$" + df.format(0.00));
 				txtValorRestante.setText("R$" + df.format(0.00));
 				limparTabela(tabelaItensComanda);
+				textCompro.setText(null);
 
 			}
 		});
@@ -319,6 +327,9 @@ public class FrmComandas extends ComandaDAO {
 					txtValorTotal.setText("R$" + df.format(valorTotal));
 					txtValorPago.setText("R$" + df.format(valorPago));
 					txtValorRestante.setText("R$" + df.format(valorAPagar));
+					comprovante(textCompro,numeroComanda);
+					textCompro.setText(textCompro.getText()+" VALOR A PAGAR R$" + df.format(valorAPagar));
+					textCompro.setText(textCompro.getText() +System.lineSeparator());
 
 				} else {
 					JOptionPane.showMessageDialog(null, "Erro ao efetuar o pagamento, tente novamente", "Bar do Bugão",

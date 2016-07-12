@@ -7,6 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -22,6 +26,7 @@ public class ComandaDAO extends Conexao {
 	private Statement statement;
 	private ResultSet rs;
 	private String sql;
+	private DecimalFormat df = new DecimalFormat("0.00");
 
 	public float atualizarItensComanda(JTable tabelaItensComanda, int numeroComanda) {
 		DefaultTableModel model = (DefaultTableModel) tabelaItensComanda.getModel();
@@ -160,8 +165,33 @@ public class ComandaDAO extends Conexao {
 		return true;
 	}
 
-	public void comprovante(JTextArea textCompro, int numeroComanda){
-		DecimalFormat df = new DecimalFormat("0.00");
+	public ArrayList<Pagamento> historicoPagamentos(int codComanda, JTextArea textComprovante){
+		ArrayList<Pagamento> arrayPagamento = new ArrayList<Pagamento>();
+		
+		try {
+			con = abreConexao();
+			statement = con.createStatement();
+			
+			sql = "SELECT PAG_OBSERVACOES, VALOR_PAGO FROM PAGAMENTOS WHERE COD_COMANDA = '"+codComanda+"'";
+			rs = statement.executeQuery(sql);
+			
+			while(rs.next()){
+				Pagamento pagamento = new Pagamento();
+				pagamento.setObservacaoPagamento(rs.getString(1));
+				pagamento.setValorPagamento(rs.getFloat(2));
+				arrayPagamento.add(pagamento);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return arrayPagamento;
+	}
+	
+	public void comprovante(JTextArea textComprovante, int codComanda){
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+		String dataAtual = dateFormat.format(new Date());
 		try {
 			con = abreConexao();
 			statement = con.createStatement();
@@ -175,20 +205,42 @@ public class ComandaDAO extends Conexao {
 					" AND"+ 
 					" P.COD_CATEGORIA = CA.COD_CATEGORIA"+
 					" AND"+
-					" IC.COD_COMANDA = '"+numeroComanda+"'"+
+					" IC.COD_COMANDA = '"+codComanda+"'"+
 					" GROUP BY"+ 
 					" P.DESCRICAO, P.PRECO";			
 			rs = statement.executeQuery(sql);
-			textCompro.setText(null);
+			
+			textComprovante.setText(null);
+			textComprovante.setText(textComprovante.getText() + "               BAR DO BUGÃO" + System.lineSeparator());
+			textComprovante.setText(textComprovante.getText() +"         "+dataAtual + System.lineSeparator());
+			textComprovante.setText(textComprovante.getText() + "               CUPOM FISCAL" + System.lineSeparator());
+			textComprovante.setText(textComprovante.getText() +System.lineSeparator());
+			textComprovante.setText(textComprovante.getText()+" -------------  CONSUMO  -------------" +System.lineSeparator());	
+			textComprovante.setText(textComprovante.getText() +System.lineSeparator());
+
 			while(rs.next()){
-				textCompro.setText(textCompro.getText() + rs.getString(1) + "   x"+ rs.getInt(3)+ "   R$"+ df.format(rs.getFloat(2)* rs.getInt(3))+ System.lineSeparator());
+				
+				textComprovante.setText(textComprovante.getText() +" "+ rs.getString(1) + "   x"+ rs.getInt(3)+ "   R$"+ df.format(rs.getFloat(2)* rs.getInt(3))+ System.lineSeparator());
 			}
+
+			textComprovante.setText(textComprovante.getText() +System.lineSeparator());	
+			textComprovante.setText(textComprovante.getText()+ "---- HISTÓRICO DE PAGAMENTOS ----"+System.lineSeparator());
+			textComprovante.setText(textComprovante.getText() +System.lineSeparator());
+			
+			ArrayList<Pagamento> arrayPag = new ArrayList<Pagamento>();
+			arrayPag = historicoPagamentos(codComanda, textComprovante);
+			
+			for (int i = 0; i < arrayPag.size(); i++) {
+				textComprovante.setText(textComprovante.getText()+" "+arrayPag.get(i).getObservacaoPagamento()+" --- R$"+ df.format(arrayPag.get(i).getValorPagamento())+ System.lineSeparator());				
+			}
+			
+			textComprovante.setText(textComprovante.getText()+" ------------------------------------------- " +System.lineSeparator());
+			textComprovante.setText(textComprovante.getText() +System.lineSeparator());
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}		
 		
 	}
 }
