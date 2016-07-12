@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 import java.awt.Component;
+import java.awt.SystemColor;
 
 public class FrmComandas extends ComandaDAO {
 
@@ -85,7 +86,6 @@ public class FrmComandas extends ComandaDAO {
 	 */
 	private void initialize() {
 		formComandas = new JFrame();
-		formComandas.setResizable(false);
 		formComandas.getContentPane().setBackground(Color.WHITE);
 		formComandas.setTitle("BAR DO BUG\u00C3O");
 		formComandas.setBounds(100, 100, 1262, 702);
@@ -98,6 +98,7 @@ public class FrmComandas extends ComandaDAO {
 		formComandas.getContentPane().add(scrollComprovante);
 		
 		textCompro = new JTextArea();
+		textCompro.setBackground(SystemColor.menu);
 		textCompro.setEditable(false);
 		textCompro.setFont(new Font("Trebuchet MS", Font.PLAIN, 13));
 		scrollComprovante.setViewportView(textCompro);
@@ -309,6 +310,11 @@ public class FrmComandas extends ComandaDAO {
 					txtValorTotal.setText("R$" + df.format(valorTotal));
 					txtValorPago.setText("R$" + df.format(valorPago));
 					txtValorRestante.setText("R$" + df.format(valorAPagar));
+					
+					txtValorTotal.setText("R$" + df.format(valorTotal));
+					txtValorPago.setText("R$" + df.format(valorPago));
+					txtValorRestante.setText("R$" + df.format(valorAPagar));
+					comprovante(textCompro,numeroComanda);
 				}
 			}
 		});
