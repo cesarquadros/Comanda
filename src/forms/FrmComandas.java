@@ -54,13 +54,7 @@ public class FrmComandas extends ComandaDAO {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		/*
-		 * tabelaItensComanda.getColumnModel().getColumn(0).setCellRenderer(new
-		 * adicionarIcone((NewJFrame.class.getResource("/image/xis.png")).
-		 * toString())); DefaultTableModel modelo = (DefaultTableModel)
-		 * tabelaItensComanda.getModel(); modelo.addRow(new Object[]{null,
-		 * "Descricao"});
-		 */
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -272,6 +266,7 @@ public class FrmComandas extends ComandaDAO {
 		label.setBounds(186, 0, 251, 107);
 		panel.add(label);
 
+<<<<<<< HEAD
 		JButton btnAtualizarComanda = new JButton("Atualizar");
 		btnAtualizarComanda.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -300,6 +295,11 @@ public class FrmComandas extends ComandaDAO {
 				 * "Digite apenas números", "Bar do Bugão",
 				 * JOptionPane.ERROR_MESSAGE); } };
 				 */
+=======
+		btnEfetuarPagamento.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+>>>>>>> 6031bd8761729046832153bae40572deebde4dfa
 				int numeroComanda = Integer
 						.parseInt((String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
 
