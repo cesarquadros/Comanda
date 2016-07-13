@@ -1,27 +1,31 @@
 package forms;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import com.sun.glass.events.KeyEvent;
 import dao.ComandaDAO;
 import model.ItemComanda;
 import model.Pagamento;
-
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
-import java.awt.TextArea;
+import java.awt.Robot;
+import java.awt.AWTException;
 import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.ActionEvent;
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.ListSelectionModel;
 import java.awt.event.MouseAdapter;
@@ -29,9 +33,8 @@ import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import javax.swing.JPanel;
-import javax.swing.JTextPane;
+import javax.swing.KeyStroke;
 import javax.swing.JTextArea;
-import java.awt.Component;
 import java.awt.SystemColor;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -58,14 +61,14 @@ public class FrmComandas extends ComandaDAO {
 	private ItemComanda itemComanda = new ItemComanda();
 	private Pagamento pagamento = new Pagamento();
 	private JLabel lblNewLabel_1;
-	private JLabel label;
 	private JMenu mnProdutos;
+	private JLabel lblAtualizarComandas;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -249,16 +252,6 @@ public class FrmComandas extends ComandaDAO {
 
 		btnEfetuarPagamento.setEnabled(false);
 
-		label = new JLabel("");
-		label.setIcon(new ImageIcon(FrmComandas.class.getResource("/imagens/logoNovo251.png")));
-		label.setBounds(332, 0, 251, 107);
-		panel.add(label);
-
-		JButton btnAtualizarComanda = new JButton("Atualizar");
-		btnAtualizarComanda.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnAtualizarComanda.setBounds(84, 622, 131, 41);
-		formComandas.getContentPane().add(btnAtualizarComanda);
-
 		atualizarComandas(tabelaComandas, lblQuantidade);
 		getNewRenderedTable(tabelaComandas);
 		
@@ -278,6 +271,12 @@ public class FrmComandas extends ComandaDAO {
 			}
 		});
 		mnProdutos.add(mntmCadastrar);
+		
+		lblAtualizarComandas = new JLabel("Pressione a tecla F5 para atualizar as comandas");
+		lblAtualizarComandas.setForeground(Color.BLACK);
+		lblAtualizarComandas.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
+		lblAtualizarComandas.setBounds(20, 614, 285, 33);
+		formComandas.getContentPane().add(lblAtualizarComandas);
 
 		tabelaComandas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
@@ -315,24 +314,45 @@ public class FrmComandas extends ComandaDAO {
 				}
 			}
 		});
-		btnAtualizarComanda.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					atualizarComandas(tabelaComandas, lblQuantidade);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		
+		tabelaComandas.addKeyListener(new KeyListener() {
+
+
+				@Override
+				public void keyPressed(java.awt.event.KeyEvent e) {
+					// TODO Auto-generated method stub
+		            if(e.getKeyCode() == KeyEvent.VK_F5){
+		            	//se o F5 for pressionado
+		                //lógica para atualizar tabela
+						try {
+							atualizarComandas(tabelaComandas, lblQuantidade);
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						getNewRenderedTable(tabelaComandas);
+
+						txtValorTotal.setText("R$" + df.format(0.00));
+						txtValorPago.setText("R$" + df.format(0.00));
+						txtValorRestante.setText("R$" + df.format(0.00));
+						limparTabela(tabelaItensComanda);
+						textCompro.setText(null);
+		            }
+					
 				}
-				getNewRenderedTable(tabelaComandas);
 
-				txtValorTotal.setText("R$" + df.format(0.00));
-				txtValorPago.setText("R$" + df.format(0.00));
-				txtValorRestante.setText("R$" + df.format(0.00));
-				limparTabela(tabelaItensComanda);
-				textCompro.setText(null);
+				@Override
+				public void keyReleased(java.awt.event.KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
 
-			}
-		});
+				@Override
+				public void keyTyped(java.awt.event.KeyEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+		    });
 		tabelaItensComanda.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent clique) {

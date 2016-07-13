@@ -23,6 +23,8 @@ import java.sql.SQLException;
 import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
+import java.awt.Window.Type;
 
 public class FrmProdutos extends ProdutosDAO{
 
@@ -63,16 +65,18 @@ public class FrmProdutos extends ProdutosDAO{
 	 */
 	private void initialize() {
 		formProdutos = new JFrame();
-		formProdutos.setBounds(100, 100, 630, 314);
+		formProdutos.setType(Type.UTILITY);
+		formProdutos.setResizable(false);
+		formProdutos.setBounds(100, 100, 300, 370);
 		formProdutos.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		formProdutos.getContentPane().setLayout(null);
 		
 		JComboBox<String> cboCategoria = new JComboBox<String>();
-		cboCategoria.setBounds(10, 180, 148, 26);
+		cboCategoria.setBounds(15, 237, 148, 26);
 		formProdutos.getContentPane().add(cboCategoria);
 		
 		JButton btnNovo = new JButton("Novo");
-		btnNovo.setBounds(10, 238, 89, 23);
+		btnNovo.setBounds(15, 295, 70, 23);
 		formProdutos.getContentPane().add(btnNovo);
 		
 		JButton btnSalvar = new JButton("Salvar");
@@ -101,42 +105,42 @@ public class FrmProdutos extends ProdutosDAO{
 				
 			}
 		});
-		btnSalvar.setBounds(208, 238, 89, 23);
+		btnSalvar.setBounds(106, 295, 70, 23);
 		formProdutos.getContentPane().add(btnSalvar);
 		
 		JButton btnEditar = new JButton("Editar");
-		btnEditar.setBounds(109, 238, 89, 23);
+		btnEditar.setBounds(198, 295, 76, 23);
 		formProdutos.getContentPane().add(btnEditar);
 		
 		txtNomeProd = new JTextField();
-		txtNomeProd.setBounds(10, 122, 116, 20);
+		txtNomeProd.setBounds(15, 179, 116, 20);
 		formProdutos.getContentPane().add(txtNomeProd);
 		txtNomeProd.setColumns(10);
 		
 		txtPreco = new JTextField();
 		txtPreco.setColumns(10);
-		txtPreco.setBounds(183, 180, 86, 20);
+		txtPreco.setBounds(188, 237, 86, 20);
 		formProdutos.getContentPane().add(txtPreco);
 		
 		txtObservacao = new JTextField();
 		txtObservacao.setColumns(10);
-		txtObservacao.setBounds(136, 122, 133, 20);
+		txtObservacao.setBounds(141, 179, 133, 20);
 		formProdutos.getContentPane().add(txtObservacao);
 		
 		JLabel lblNomeDoProduto = new JLabel("Nome do Produto");
-		lblNomeDoProduto.setBounds(10, 105, 116, 14);
+		lblNomeDoProduto.setBounds(15, 162, 116, 14);
 		formProdutos.getContentPane().add(lblNomeDoProduto);
 		
 		JLabel lblObs = new JLabel("Observa\u00E7\u00E3o");
-		lblObs.setBounds(136, 105, 116, 14);
+		lblObs.setBounds(141, 162, 116, 14);
 		formProdutos.getContentPane().add(lblObs);
 		
 		JLabel lblPreco = new JLabel("Pre\u00E7o");
-		lblPreco.setBounds(183, 163, 86, 14);
+		lblPreco.setBounds(188, 220, 86, 14);
 		formProdutos.getContentPane().add(lblPreco);
 		
 		JLabel lblCat = new JLabel("Categoria");
-		lblCat.setBounds(10, 163, 86, 14);
+		lblCat.setBounds(15, 220, 86, 14);
 		formProdutos.getContentPane().add(lblCat);
 		
 		cboCategoria.addItemListener(new ItemListener() {
@@ -154,6 +158,11 @@ public class FrmProdutos extends ProdutosDAO{
 		
 		arrayCategoria = categoriaDAO.listarCategorias();
 		categoriaDAO.preencherCombo(arrayCategoria, cboCategoria);	
+		
+		JLabel label = new JLabel("");
+		label.setIcon(new ImageIcon(FrmProdutos.class.getResource("/imagens/logoNovo251.png")));
+		label.setBounds(23, 11, 251, 107);
+		formProdutos.getContentPane().add(label);
 		
 	}
 	
