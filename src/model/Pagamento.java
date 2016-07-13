@@ -1,5 +1,7 @@
 package model;
 
+import java.sql.SQLException;
+
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
@@ -38,7 +40,7 @@ public class Pagamento extends ComandaDAO {
 		this.observacaoPagamento = observacaoPagamento;
 	}
 	
-	public boolean efetuarPagamentos(JTable tabelaComandas){
+	public boolean efetuarPagamentos(JTable tabelaComandas) throws SQLException{
 		valorPagamento = 0;
 		observacaoPagamento ="";
 

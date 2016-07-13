@@ -28,7 +28,7 @@ public class ComandaDAO extends Conexao {
 	private String sql;
 	private DecimalFormat df = new DecimalFormat("0.00");
 
-	public float atualizarItensComanda(JTable tabelaItensComanda, int numeroComanda) {
+	public float atualizarItensComanda(JTable tabelaItensComanda, int numeroComanda) throws SQLException {
 		DefaultTableModel model = (DefaultTableModel) tabelaItensComanda.getModel();
 		DecimalFormat df = new DecimalFormat("0.00");
 		float valorTotal = 0;
@@ -51,18 +51,20 @@ public class ComandaDAO extends Conexao {
 						"R$"+rs.getString(5), rs.getString(6) });
 				valorTotal = valorTotal + rs.getFloat(5);
 			}
+			con.close();
 			return valorTotal;
 
 			//txtValorTotal.setText("R$" + df.format(valorTotal));
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			con.close();
 			e.printStackTrace();
 		}
+		con.close();
 		return valorTotal;
-
 	}
 
-	public void atualizarComandas(JTable tabelaComanda, JLabel lblQtdComandas) {
+	public void atualizarComandas(JTable tabelaComanda, JLabel lblQtdComandas) throws SQLException {
 		DefaultTableModel model = (DefaultTableModel) tabelaComanda.getModel();
 		limparTabela(tabelaComanda);
 		try {
@@ -83,10 +85,10 @@ public class ComandaDAO extends Conexao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		con.close();
 	}
 
-	public void fecharComanda(String numeroComanda, String status) {
+	public void fecharComanda(String numeroComanda, String status) throws SQLException {
 		try {
 			con = abreConexao();
 			statement = con.createStatement();
@@ -97,6 +99,7 @@ public class ComandaDAO extends Conexao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		con.close();
 	}
 
 	public static JTable getNewRenderedTable(final JTable table) {
@@ -127,7 +130,7 @@ public class ComandaDAO extends Conexao {
 		}
 	}
 
-	public float valorAPagar(int codComanda) {
+	public float valorAPagar(int codComanda) throws SQLException {
 		float valorApagar = 0;
 		try {
 			con = abreConexao();
@@ -138,15 +141,17 @@ public class ComandaDAO extends Conexao {
 			while (rs.next()) {
 				valorApagar += rs.getFloat(1);
 			}
+			con.close();
 			return valorApagar;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		con.close();
 		return valorApagar;
 	}
 	
-	public boolean efetuarPagamento(Pagamento pagamento){
+	public boolean efetuarPagamento(Pagamento pagamento) throws SQLException{
 		
 		try {
 			con = abreConexao();
@@ -159,13 +164,14 @@ public class ComandaDAO extends Conexao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		
+			con.close();
+			return false;
+		}		
+		con.close();
 		return true;
 	}
 
-	public ArrayList<Pagamento> historicoPagamentos(int codComanda, JTextArea textComprovante){
+	public ArrayList<Pagamento> historicoPagamentos(int codComanda, JTextArea textComprovante) throws SQLException{
 		ArrayList<Pagamento> arrayPagamento = new ArrayList<Pagamento>();
 		
 		try {
@@ -184,11 +190,13 @@ public class ComandaDAO extends Conexao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			con.close();
 		}
+		con.close();
 		return arrayPagamento;
 	}
 	
-	public void comprovante(JTextArea textComprovante, int codComanda){
+	public void comprovante(JTextArea textComprovante, int codComanda) throws SQLException{
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
 		String dataAtual = dateFormat.format(new Date());
@@ -240,7 +248,8 @@ public class ComandaDAO extends Conexao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			con.close();
 		}		
-		
+		con.close();
 	}
 }

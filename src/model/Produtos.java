@@ -6,12 +6,14 @@ public class Produtos {
 	private int codCategoria;
 	private String descricao;
 	private float preco;
+	private String observacoes;
 	
 	
-	public Produtos(int codCategoria, String descricao, float preco){
+	public Produtos(int codCategoria, String descricao, float preco, String observacoes){
 		this.codCategoria = codCategoria;
 		this.descricao = descricao;
 		this.preco = preco;
+		this.observacoes = observacoes;
 	}
 	
 	public int getCodProdutos() {
@@ -34,6 +36,14 @@ public class Produtos {
 		return descricao;
 	}
 	
+	public String getObservacoes() {
+		return observacoes;
+	}
+
+	public void setObservacoes(String observacoes) {
+		this.observacoes = observacoes;
+	}
+
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
