@@ -25,6 +25,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Window.Type;
+import java.awt.Font;
 
 public class FrmProdutos extends ProdutosDAO{
 
@@ -159,10 +160,11 @@ public class FrmProdutos extends ProdutosDAO{
 		arrayCategoria = categoriaDAO.listarCategorias();
 		categoriaDAO.preencherCombo(arrayCategoria, cboCategoria);	
 		
-		JLabel label = new JLabel("");
-		label.setIcon(null);
-		label.setBounds(23, 11, 251, 107);
-		formProdutos.getContentPane().add(label);
+		JLabel lblLogo = new JLabel("LOGO");
+		lblLogo.setFont(new Font("Tahoma", Font.PLAIN, 85));
+		lblLogo.setIcon(null);
+		lblLogo.setBounds(23, 11, 251, 107);
+		formProdutos.getContentPane().add(lblLogo);
 		
 	}
 	
