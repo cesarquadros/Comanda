@@ -7,6 +7,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import com.sun.glass.events.KeyEvent;
 import dao.ComandaDAO;
+import dao.ItemComandaDAO;
+import model.Comanda;
 import model.ItemComanda;
 import model.Pagamento;
 import javax.swing.border.BevelBorder;
@@ -32,6 +34,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.JTextArea;
@@ -57,18 +63,21 @@ public class FrmComandas extends ComandaDAO {
 	private JLabel lblPagar;
 	private JButton btnFecharComanda;
 	private JButton btnEfetuarPagamento;
-	private DecimalFormat df = new DecimalFormat("0.00");
-	private ItemComanda itemComanda = new ItemComanda();
-	private Pagamento pagamento = new Pagamento();
+	private JButton btnAbrirComanda;
+	private DecimalFormat df = new DecimalFormat("0.00");	
 	private JLabel lblNewLabel_1;
 	private JMenu mnProdutos;
 	private JLabel lblAtualizarComandas;
+	private ItemComandaDAO itemComandaDAO = new ItemComandaDAO();
+	private ItemComanda itemComanda = new ItemComanda();
+	private Pagamento pagamento = new Pagamento();
+	private Comanda comanda;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -99,7 +108,7 @@ public class FrmComandas extends ComandaDAO {
 	private void initialize() throws SQLException {
 		formComandas = new JFrame();
 		formComandas.getContentPane().setBackground(Color.WHITE);
-		formComandas.setTitle("BAR DO BUG\u00C3O");
+		formComandas.setTitle("Comanda");
 		formComandas.setBounds(100, 100, 1262, 702);
 		formComandas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		formComandas.getContentPane().setLayout(null);
@@ -130,7 +139,7 @@ public class FrmComandas extends ComandaDAO {
 				});
 		scrollComanda = new JScrollPane(tabelaComandas);
 		scrollComanda.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		scrollComanda.setBounds(7, 186, 307, 429);
+		scrollComanda.setBounds(7, 186, 307, 357);
 		formComandas.getContentPane().add(scrollComanda);
 
 		tabelaItensComanda = new JTable(0, 0);
@@ -182,7 +191,7 @@ public class FrmComandas extends ComandaDAO {
 		formComandas.getContentPane().add(lblQuantidade);
 
 		JLabel lblFundo = new JLabel("");
-		lblFundo.setIcon(new ImageIcon(FrmComandas.class.getResource("/imagens/faixa2.png")));
+		lblFundo.setIcon(null);
 		lblFundo.setBounds(130, 0, 991, 190);
 		formComandas.getContentPane().add(lblFundo);
 
@@ -241,43 +250,66 @@ public class FrmComandas extends ComandaDAO {
 
 		btnFecharComanda = new JButton("Fechar a conta");
 		btnFecharComanda.setFont(new Font("Tahoma", Font.BOLD, 11));
-		btnFecharComanda.setBounds(9, 9, 131, 41);
+		btnFecharComanda.setBounds(9, 60, 131, 41);
 		panel.add(btnFecharComanda);
 		btnFecharComanda.setEnabled(false);
 
 		btnEfetuarPagamento = new JButton("Efetuar pagamento");
 		btnEfetuarPagamento.setFont(new Font("Tahoma", Font.BOLD, 10));
-		btnEfetuarPagamento.setBounds(7, 59, 131, 41);
+		btnEfetuarPagamento.setBounds(150, 60, 131, 41);
 		panel.add(btnEfetuarPagamento);
 
 		btnEfetuarPagamento.setEnabled(false);
 
+		btnAbrirComanda = new JButton("Nova comanda");
+		btnAbrirComanda.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnAbrirComanda.setBounds(9, 9, 131, 41);
+		panel.add(btnAbrirComanda);
+
 		atualizarComandas(tabelaComandas, lblQuantidade);
 		getNewRenderedTable(tabelaComandas);
-		
+
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 71, 21);
+		menuBar.setBounds(0, 0, 72, 21);
 		formComandas.getContentPane().add(menuBar);
-		
+
 		mnProdutos = new JMenu("Produtos");
 		menuBar.add(mnProdutos);
-		
+
 		JMenuItem mntmCadastrar = new JMenuItem("Cadastrar");
+		mnProdutos.add(mntmCadastrar);
+
+		lblAtualizarComandas = new JLabel("F1 - Abre uma nova comanda");
+		lblAtualizarComandas.setForeground(Color.BLACK);
+		lblAtualizarComandas.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
+		lblAtualizarComandas.setBounds(17, 545, 285, 33);
+		formComandas.getContentPane().add(lblAtualizarComandas);
+		
+		JLabel lblFatualizaAs = new JLabel("F5 - Atualiza as comandas em aberto");
+		lblFatualizaAs.setForeground(Color.BLACK);
+		lblFatualizaAs.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
+		lblFatualizaAs.setBounds(17, 566, 285, 33);
+		formComandas.getContentPane().add(lblFatualizaAs);
+		
+		JLabel lblFFecha = new JLabel("F6 - Fecha a comanda selecionada");
+		lblFFecha.setForeground(Color.BLACK);
+		lblFFecha.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
+		lblFFecha.setBounds(17, 586, 285, 33);
+		formComandas.getContentPane().add(lblFFecha);
+		
+		JLabel lblFEfetuar = new JLabel("F7 - Efetua pagamento na comanda selecionada");
+		lblFEfetuar.setForeground(Color.BLACK);
+		lblFEfetuar.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
+		lblFEfetuar.setBounds(17, 607, 297, 33);
+		formComandas.getContentPane().add(lblFEfetuar);
+
 		mntmCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				FrmProdutos frmProdutos = new FrmProdutos();
 				frmProdutos.formProdutos.setVisible(true);
 			}
 		});
-		mnProdutos.add(mntmCadastrar);
-		
-		lblAtualizarComandas = new JLabel("Pressione a tecla F5 para atualizar as comandas");
-		lblAtualizarComandas.setForeground(Color.BLACK);
-		lblAtualizarComandas.setFont(new Font("Trebuchet MS", Font.BOLD, 12));
-		lblAtualizarComandas.setBounds(20, 614, 285, 33);
-		formComandas.getContentPane().add(lblAtualizarComandas);
-
 		tabelaComandas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
@@ -291,8 +323,7 @@ public class FrmComandas extends ComandaDAO {
 
 						float valorTotal;
 						try {
-							valorTotal = atualizarItensComanda(tabelaItensComanda, numeroComanda);
-
+							valorTotal = itemComandaDAO.atualizarItensComanda(tabelaItensComanda, numeroComanda);
 							float valorPago = valorAPagar(numeroComanda);
 							float valorAPagar = valorTotal - valorPago;
 							comprovante(textCompro, numeroComanda);
@@ -314,56 +345,116 @@ public class FrmComandas extends ComandaDAO {
 				}
 			}
 		});
-		
+
+		// Acoes de atalhos para executar as funcoes de atualizar comanda,
+		// fechar comanda e efetuar pagamento
 		tabelaComandas.addKeyListener(new KeyListener() {
-
-
-				@Override
-				public void keyPressed(java.awt.event.KeyEvent e) {
-					// TODO Auto-generated method stub
-		            if(e.getKeyCode() == KeyEvent.VK_F5){
-		            	//se o F5 for pressionado
-		                //lógica para atualizar tabela
+			@Override
+			public void keyPressed(java.awt.event.KeyEvent e) {
+				// TODO Auto-generated method stub
+				if (e.getKeyCode() == KeyEvent.VK_F5) {
+					// se o F5 for pressionado
+					// lógica para atualizar tabela
+					try {
+						atualizarComandas(tabelaComandas, lblQuantidade);
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					getNewRenderedTable(tabelaComandas);
+					txtValorTotal.setText("R$" + df.format(0.00));
+					txtValorPago.setText("R$" + df.format(0.00));
+					txtValorRestante.setText("R$" + df.format(0.00));
+					limparTabela(tabelaItensComanda);
+					textCompro.setText(null);
+				} else if (e.getKeyCode() == KeyEvent.VK_F6) {
+					String numeroComanda = (String) tabelaComandas.getModel()
+							.getValueAt(tabelaComandas.getSelectedRow(), 0);
+					int confirmacao = JOptionPane.showConfirmDialog(null, "Deseja realmente fechar a conta?",
+							"Bar do Bugão", JOptionPane.YES_NO_OPTION);
+					if (confirmacao == JOptionPane.YES_OPTION) {
 						try {
+							fecharComanda(numeroComanda, "FECHADO");
 							atualizarComandas(tabelaComandas, lblQuantidade);
 						} catch (SQLException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						getNewRenderedTable(tabelaComandas);
-
-						txtValorTotal.setText("R$" + df.format(0.00));
-						txtValorPago.setText("R$" + df.format(0.00));
-						txtValorRestante.setText("R$" + df.format(0.00));
 						limparTabela(tabelaItensComanda);
-						textCompro.setText(null);
-		            }
+						btnFecharComanda.setEnabled(false);
+					}
+				} else if (e.getKeyCode() == KeyEvent.VK_F7) {
+					int numeroComanda = Integer.parseInt(
+							(String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
+					try {
+						boolean efetuarPagamento = pagamento.efetuarPagamentos(tabelaComandas);
+
+						if (efetuarPagamento) {
+							JOptionPane.showMessageDialog(null, "Pagamento efetuado", "Bar do Bugão",
+									JOptionPane.INFORMATION_MESSAGE);
+							float valorTotal;
+
+							valorTotal = itemComandaDAO.atualizarItensComanda(tabelaItensComanda, numeroComanda);
+
+							float valorPago = valorAPagar(numeroComanda);
+							float valorAPagar = valorTotal - valorPago;
+							txtValorTotal.setText("R$" + df.format(valorTotal));
+							txtValorPago.setText("R$" + df.format(valorPago));
+							txtValorRestante.setText("R$" + df.format(valorAPagar));
+							comprovante(textCompro, numeroComanda);
+							textCompro.setText(textCompro.getText() + " VALOR A PAGAR R$" + df.format(valorAPagar));
+							textCompro.setText(textCompro.getText() + System.lineSeparator());
+
+						} else {
+							JOptionPane.showMessageDialog(null, "Erro ao efetuar o pagamento, tente novamente",
+									"Bar do Bugão", JOptionPane.ERROR_MESSAGE);
+						}
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}else if(e.getKeyCode() == KeyEvent.VK_F1){
+					String nomeComanda = "";
+					SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					String dataAtual = dateFormat.format(new Date());
+
+					while (nomeComanda.equals("")) {
+						nomeComanda = JOptionPane.showInputDialog("Nome da comanda", null);
+					}
+					comanda = new Comanda(nomeComanda, dataAtual, "ABERTO", 0);
+					boolean abrirComanda = abrirComanda(comanda);
 					
+					if(abrirComanda){
+						JOptionPane.showMessageDialog(null, "Comanda aberta para: "+nomeComanda, "Bar do Bugão",
+								JOptionPane.INFORMATION_MESSAGE);
+					}else{
+						JOptionPane.showMessageDialog(null, "OPS, ocorreu um erro ao abrir a comanda", "Bar do Bugão",
+								JOptionPane.INFORMATION_MESSAGE);
+					}					
 				}
 
-				@Override
-				public void keyReleased(java.awt.event.KeyEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
+			}
 
-				@Override
-				public void keyTyped(java.awt.event.KeyEvent e) {
-					// TODO Auto-generated method stub
-					
-				}
-		    });
+			@Override
+			public void keyReleased(java.awt.event.KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void keyTyped(java.awt.event.KeyEvent e) {
+				// TODO Auto-generated method stub
+			}
+		});
 		tabelaItensComanda.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent clique) {
 				if (clique.getClickCount() == 2) {
-
 					itemComanda.excluirItemComanda(tabelaItensComanda);
 					int numeroComanda = Integer.parseInt(
 							(String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
 					float valorTotal;
 					try {
-						valorTotal = atualizarItensComanda(tabelaItensComanda, numeroComanda);
+						valorTotal = itemComandaDAO.atualizarItensComanda(tabelaItensComanda, numeroComanda);
 
 						float valorPago = valorAPagar(numeroComanda);
 						float valorAPagar = valorTotal - valorPago;
@@ -394,7 +485,7 @@ public class FrmComandas extends ComandaDAO {
 								JOptionPane.INFORMATION_MESSAGE);
 						float valorTotal;
 
-						valorTotal = atualizarItensComanda(tabelaItensComanda, numeroComanda);
+						valorTotal = itemComandaDAO.atualizarItensComanda(tabelaItensComanda, numeroComanda);
 
 						float valorPago = valorAPagar(numeroComanda);
 						float valorAPagar = valorTotal - valorPago;
@@ -433,6 +524,27 @@ public class FrmComandas extends ComandaDAO {
 					btnFecharComanda.setEnabled(false);
 				} else {
 
+				}
+			}
+		});
+		btnAbrirComanda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String nomeComanda = "";
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				String dataAtual = dateFormat.format(new Date());
+
+				while (nomeComanda.equals("")) {
+					nomeComanda = JOptionPane.showInputDialog("Nome da comanda", null);
+				}
+				comanda = new Comanda(nomeComanda, dataAtual, "ABERTO", 0);
+				boolean abrirComanda = abrirComanda(comanda);
+				
+				if(abrirComanda){
+					JOptionPane.showMessageDialog(null, "Comanda aberta para: "+nomeComanda, "Bar do Bugão",
+							JOptionPane.INFORMATION_MESSAGE);
+				}else{
+					JOptionPane.showMessageDialog(null, "OPS, ocorreu um erro ao abrir a comanda", "Bar do Bugão",
+							JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});

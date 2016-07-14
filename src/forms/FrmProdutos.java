@@ -160,7 +160,7 @@ public class FrmProdutos extends ProdutosDAO{
 		categoriaDAO.preencherCombo(arrayCategoria, cboCategoria);	
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(FrmProdutos.class.getResource("/imagens/logoNovo251.png")));
+		label.setIcon(null);
 		label.setBounds(23, 11, 251, 107);
 		formProdutos.getContentPane().add(label);
 		

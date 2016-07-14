@@ -6,11 +6,17 @@ public class Comanda {
 
 	private int codComanda;
 	private String nome;
-	private Date data;
+	private String data;
 	private String status;
 	private float valorTotal;
 	
-	public Comanda(String nome, Date data, String status, float valorTotal){
+	
+	
+	public Comanda() {
+		super();
+	}
+
+	public Comanda(String nome, String data, String status, float valorTotal){
 		this.nome = nome;
 		this.data = data;
 		this.status = status;
@@ -33,11 +39,11 @@ public class Comanda {
 		this.nome = nome;
 	}
 	
-	public Date getData() {
+	public String getData() {
 		return data;
 	}
 	
-	public void setData(Date data) {
+	public void setData(String data) {
 		this.data = data;
 	}
 	

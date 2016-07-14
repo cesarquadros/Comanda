@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import dao.Conexao;
+import model.Comanda;
 import model.Pagamento;
 
 public class ComandaDAO extends Conexao {
@@ -28,41 +29,19 @@ public class ComandaDAO extends Conexao {
 	private String sql;
 	private DecimalFormat df = new DecimalFormat("0.00");
 
-	public float atualizarItensComanda(JTable tabelaItensComanda, int numeroComanda) throws SQLException {
-		DefaultTableModel model = (DefaultTableModel) tabelaItensComanda.getModel();
-		DecimalFormat df = new DecimalFormat("0.00");
-		float valorTotal = 0;
-		try {
-			con = abreConexao();
-			statement = con.createStatement();
-
-			sql = "SELECT C.NOME_CLIENTE AS CLIENTE, P.DESCRICAO AS PRODUTOS, P.OBSERVACOES, CA.CATEGORIA, P.PRECO, I.COD_ITEM"
-					+ " FROM ITENS_COMANDA I" + " INNER JOIN COMANDA C ON C.COD_COMANDA = I.COD_COMANDA"
-					+ " INNER JOIN PRODUTOS P ON P.COD_PRODUTO = I.COD_PRODUTO"
-					+ " INNER JOIN CATEGORIAS CA ON CA.COD_CATEGORIA = P.COD_CATEGORIA" + " WHERE I.COD_COMANDA='"
-					+ numeroComanda + "'";
-
-			rs = statement.executeQuery(sql);
-
-			limparTabela(tabelaItensComanda);
-			
-			while (rs.next()) {
-				model.addRow(new String[] { rs.getString(1), rs.getString(2), rs.getString(4), rs.getString(3),
-						"R$"+rs.getString(5), rs.getString(6) });
-				valorTotal = valorTotal + rs.getFloat(5);
-			}
-			con.close();
-			return valorTotal;
-
-			//txtValorTotal.setText("R$" + df.format(valorTotal));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			con.close();
-			e.printStackTrace();
-		}
-		con.close();
-		return valorTotal;
-	}
+	
+    public boolean abrirComanda(Comanda comanda) {
+        try {
+            con = abreConexao();
+            sql = "INSERT INTO COMANDA(NOME_CLIENTE, DATA_INICIO, STATUS) VALUES('"+comanda.getNome()+"','"+comanda.getData()+"','"+comanda.getStatus()+"')";
+            statement = con.createStatement();
+            statement.executeUpdate(sql);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 	public void atualizarComandas(JTable tabelaComanda, JLabel lblQtdComandas) throws SQLException {
 		DefaultTableModel model = (DefaultTableModel) tabelaComanda.getModel();
@@ -93,8 +72,9 @@ public class ComandaDAO extends Conexao {
 			con = abreConexao();
 			statement = con.createStatement();
 			String sql = "UPDATE COMANDA SET STATUS ='" + status + "' WHERE COD_COMANDA = '" + numeroComanda + "'";
-
 			statement.executeUpdate(sql);
+			
+						
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
