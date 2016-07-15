@@ -33,6 +33,7 @@ public class FrmProdutos extends ProdutosDAO{
 	private JTextField txtNomeProd;
 	private JTextField txtPreco;
 	private JTextField txtObservacao;
+	private JComboBox<String> cboCategoria;
 	private CategoriaDAO categoriaDAO = new CategoriaDAO();
 	
 	private ArrayList<Categoria> arrayCategoria;
@@ -72,7 +73,7 @@ public class FrmProdutos extends ProdutosDAO{
 		formProdutos.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		formProdutos.getContentPane().setLayout(null);
 		
-		JComboBox<String> cboCategoria = new JComboBox<String>();
+		cboCategoria = new JComboBox<String>();
 		cboCategoria.setBounds(15, 237, 148, 26);
 		formProdutos.getContentPane().add(cboCategoria);
 		
@@ -83,27 +84,7 @@ public class FrmProdutos extends ProdutosDAO{
 		JButton btnSalvar = new JButton("Salvar");
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String descProd = txtNomeProd.getText();
-				Float preco = Float.valueOf(txtPreco.getText());
-				int posicaoArray = cboCategoria.getSelectedIndex();
-				int codCategoria = arrayCategoria.get(posicaoArray).getCodCategoria();
-				String observacoes = txtObservacao.getText();
-				Produtos produtos = new Produtos(codCategoria, descProd, preco, observacoes);
-				try {
-					boolean inserir = inserirProduto(produtos);
-					
-					if(inserir){
-						JOptionPane.showMessageDialog(null, "Produto cadastrado", "Bar do Bugão",
-								JOptionPane.INFORMATION_MESSAGE);
-					}else{
-						JOptionPane.showMessageDialog(null, "OPS! Ocorreu um erro, tente novamente", "Bar do Bugão",
-								JOptionPane.INFORMATION_MESSAGE);
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+				novoProduto();				
 			}
 		});
 		btnSalvar.setBounds(106, 295, 70, 23);
@@ -167,6 +148,27 @@ public class FrmProdutos extends ProdutosDAO{
 		formProdutos.getContentPane().add(lblLogo);
 		
 	}
-	
+	public void novoProduto(){
+		String descProd = txtNomeProd.getText().toUpperCase();
+		Float preco = Float.valueOf(txtPreco.getText().replaceAll(",", "."));
+		int posicaoArray = cboCategoria.getSelectedIndex();
+		int codCategoria = arrayCategoria.get(posicaoArray).getCodCategoria();
+		String observacoes = txtObservacao.getText();
+		Produtos produtos = new Produtos(codCategoria, descProd, preco, observacoes);
+		try {
+			boolean inserir = inserirProduto(produtos);
+			
+			if(inserir){
+				JOptionPane.showMessageDialog(null, "Produto cadastrado", "Bar do Bugão",
+						JOptionPane.INFORMATION_MESSAGE);
+			}else{
+				JOptionPane.showMessageDialog(null, "OPS! Ocorreu um erro, tente novamente", "Bar do Bugão",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 }

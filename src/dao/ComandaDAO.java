@@ -50,7 +50,7 @@ public class ComandaDAO extends Conexao {
 			con = abreConexao();
 			statement = con.createStatement();
 
-			String sql = "SELECT COD_COMANDA, NOME_CLIENTE, STATUS, CONVERT(VARCHAR(10),DATA_INICIO,103) FROM COMANDA";
+			String sql = "SELECT COD_COMANDA, NOME_CLIENTE, STATUS, CONVERT(VARCHAR(10),DATA_INICIO,103) FROM COMANDA WHERE STATUS = 'ABERTO'";
 			rs = statement.executeQuery(sql);
 			int qtdComandas = 0;
 			while (rs.next()) {
