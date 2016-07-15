@@ -178,8 +178,6 @@ public class ComandaDAO extends Conexao {
 	
 	public void comprovante(JTextArea textComprovante, int codComanda) throws SQLException{
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
-		String dataAtual = dateFormat.format(new Date());
 		try {
 			con = abreConexao();
 			statement = con.createStatement();
@@ -198,13 +196,7 @@ public class ComandaDAO extends Conexao {
 					" P.DESCRICAO, P.PRECO";			
 			rs = statement.executeQuery(sql);
 			
-			textComprovante.setText(null);
-			textComprovante.setText(textComprovante.getText() + "               BAR DO BUGÃO" + System.lineSeparator());
-			textComprovante.setText(textComprovante.getText() +"         "+dataAtual + System.lineSeparator());
-			textComprovante.setText(textComprovante.getText() + "               CUPOM FISCAL" + System.lineSeparator());
-			textComprovante.setText(textComprovante.getText() +System.lineSeparator());
-			textComprovante.setText(textComprovante.getText()+" -------------  CONSUMO  -------------" +System.lineSeparator());	
-			textComprovante.setText(textComprovante.getText() +System.lineSeparator());
+			cabecalhoComprovante(textComprovante);
 
 			while(rs.next()){
 				
@@ -231,5 +223,18 @@ public class ComandaDAO extends Conexao {
 			con.close();
 		}		
 		con.close();
+	}
+	
+	public void cabecalhoComprovante(JTextArea textComprovante){
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - HH:mm:ss");
+		String dataAtual = dateFormat.format(new Date());
+		textComprovante.setText(null);
+		textComprovante.setText(textComprovante.getText() + "               BAR DO BUGÃO" + System.lineSeparator());
+		textComprovante.setText(textComprovante.getText() +"         "+dataAtual + System.lineSeparator());
+		textComprovante.setText(textComprovante.getText() + "               CUPOM FISCAL" + System.lineSeparator());
+		textComprovante.setText(textComprovante.getText() +System.lineSeparator());
+		textComprovante.setText(textComprovante.getText()+" -------------  CONSUMO  -------------" +System.lineSeparator());	
+		textComprovante.setText(textComprovante.getText() +System.lineSeparator());
+		
 	}
 }
