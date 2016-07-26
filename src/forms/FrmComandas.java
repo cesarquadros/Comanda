@@ -154,11 +154,11 @@ public class FrmComandas extends ComandaDAO {
 			}
 		});
 
-		// Bloqueia a rendenização das tabelas
+		// Bloqueia a rendenização das tabelas e reordenação das tabelas
 		tabelaItensComanda.getTableHeader().setResizingAllowed(false);
-		// Bloqueia a reordenação das tabelas
-		tabelaItensComanda.getColumnModel().getColumn(0).setPreferredWidth(40);
 		tabelaItensComanda.getTableHeader().setReorderingAllowed(false);
+
+		tabelaItensComanda.getColumnModel().getColumn(0).setPreferredWidth(40);
 		tabelaItensComanda.getColumnModel().getColumn(3).setPreferredWidth(35);
 		tabelaItensComanda.getColumnModel().getColumn(4).setPreferredWidth(30);
 		tabelaItensComanda.getColumnModel().getColumn(5).setMaxWidth(0);

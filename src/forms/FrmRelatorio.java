@@ -103,7 +103,7 @@ public class FrmRelatorio extends RelatorioDAO {
 		formRelatorio.getContentPane().setBackground(Color.WHITE);
 		formRelatorio.setTitle("Comanda");
 		formRelatorio.setBounds(100, 100, 1267, 589);
-		formRelatorio.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		formRelatorio.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		formRelatorio.getContentPane().setLayout(null);
 
 		JScrollPane scrollComprovante = new JScrollPane(textCompro);
