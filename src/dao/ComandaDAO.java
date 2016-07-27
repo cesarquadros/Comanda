@@ -94,6 +94,8 @@ public class ComandaDAO extends Conexao {
 					setForeground(new Color(34, 139, 34));
 				} else if (status.equalsIgnoreCase("FECHADO")) {
 					setForeground(Color.red);
+				}else if(status.equalsIgnoreCase("PENDENTE")){
+					setForeground(Color.orange);
 				}
 
 				return this;

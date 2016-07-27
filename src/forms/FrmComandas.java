@@ -268,9 +268,6 @@ public class FrmComandas extends ComandaDAO {
 		btnAbrirComanda.setBounds(9, 9, 131, 41);
 		panel.add(btnAbrirComanda);
 
-		atualizarComandas(tabelaComandas, lblQuantidade);
-		getNewRenderedTable(tabelaComandas);
-
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 1246, 21);
 		formComandas.getContentPane().add(menuBar);
@@ -394,6 +391,9 @@ public class FrmComandas extends ComandaDAO {
 				abrirComanda();
 			}
 		});
+	
+		atualizarComandas(tabelaComandas, lblQuantidade);
+		getNewRenderedTable(tabelaComandas);
 	}
 
 	//abrir uma nova comanda

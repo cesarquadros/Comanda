@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 
 public class Conexao {
-	private static String URL = "jdbc:sqlserver://localhost:1433;"+"databaseName=COMANDA";
+	private static String URL = "jdbc:sqlserver://localhost:1433;"+"databaseName=Comanda";
 	private static String user;
 	private static String password;
 	// Esse é o nome do driver, que na internet você vai encontrar de varias
