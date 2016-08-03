@@ -30,7 +30,7 @@ public class ItemComandaDAO extends Conexao{
 		}
 	}
 
-	public float atualizarItensComanda(JTable tabelaItensComanda, int numeroComanda) throws SQLException {
+	public void atualizarItensComanda(JTable tabelaItensComanda, int numeroComanda) throws SQLException {
 		DefaultTableModel model = (DefaultTableModel) tabelaItensComanda.getModel();
 		DecimalFormat df = new DecimalFormat("0.00");
 		float valorTotal = 0;
@@ -52,6 +52,36 @@ public class ItemComandaDAO extends Conexao{
 				model.addRow(new String[] { rs.getString(1), rs.getString(2), rs.getString(4), rs.getString(3),
 						"R$"+rs.getString(5), rs.getString(6) });
 				valorTotal = valorTotal + rs.getFloat(5);
+			}
+			con.close();
+			//return valorTotal;
+
+			//txtValorTotal.setText("R$" + df.format(valorTotal));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			con.close();
+			e.printStackTrace();
+		}
+		con.close();
+		//return valorTotal;
+	}
+	
+	public float valorTotal(int numeroComanda) throws SQLException {
+		DecimalFormat df = new DecimalFormat("0.00");
+		float valorTotal = 0;
+		try {
+			con = abreConexao();
+			statement = con.createStatement();
+
+			sql = "SELECT P.PRECO "
+					+ "FROM PRODUTOS P "
+					+ "INNER JOIN ITENS_COMANDA I ON I.COD_PRODUTO = P.COD_PRODUTO "
+					+ "WHERE I.COD_COMANDA = '"+ numeroComanda + "'";
+
+			rs = statement.executeQuery(sql);
+			
+			while (rs.next()) {
+				valorTotal = valorTotal + rs.getFloat(1);
 			}
 			con.close();
 			return valorTotal;

@@ -282,19 +282,6 @@ public class FrmComandas extends ComandaDAO {
 		menuBar.add(mnRelatrios);
 		
 		JMenuItem mntmRelatrioDeComanda = new JMenuItem("Relat\u00F3rio de comanda");
-		mntmRelatrioDeComanda.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				FrmRelatorio frmRelatorio;
-				try {
-					frmRelatorio = new FrmRelatorio();
-					frmRelatorio.formRelatorio.setVisible(true);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
-			}
-		});
 		mnRelatrios.add(mntmRelatrioDeComanda);
 
 		lblAtualizarComandas = new JLabel("F1 - Abre uma nova comanda");
@@ -391,7 +378,19 @@ public class FrmComandas extends ComandaDAO {
 				abrirComanda();
 			}
 		});
-	
+		mntmRelatrioDeComanda.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {				
+				FrmRelatorio frmRelatorio;
+				try {
+					frmRelatorio = new FrmRelatorio();
+					frmRelatorio.formRelatorio.setVisible(true);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		});
+		
 		atualizarComandas(tabelaComandas, lblQuantidade);
 		getNewRenderedTable(tabelaComandas);
 	}
@@ -445,8 +444,9 @@ public class FrmComandas extends ComandaDAO {
 			if (efetuarPagamento) {
 				JOptionPane.showMessageDialog(null, "Pagamento efetuado", "Bar do Bugão",
 						JOptionPane.INFORMATION_MESSAGE);
+				itemComandaDAO.atualizarItensComanda(tabelaItensComanda,numeroComanda);
 				//pegando o valor total da comanda selecionada
-				float valorTotal = itemComandaDAO.atualizarItensComanda(tabelaItensComanda, numeroComanda);	
+				float valorTotal = itemComandaDAO.valorTotal(numeroComanda);	
 				//pegando os valores pagos da comanda selecionada
 				float valorPago = valorAPagar(numeroComanda);
 				//subtraindo o valor pago do valor total
@@ -483,17 +483,42 @@ public class FrmComandas extends ComandaDAO {
 		limparTabela(tabelaItensComanda);
 	}
 	//fechar uma comanda aberta
-	public void fecharComanda() {
+	public void fecharComanda() throws NumberFormatException {
 		//égando o número da comanda selecionada
 		String numeroComanda = (String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0);
 		//confirmação do fechamento da comanda
-		int confirmacao = JOptionPane.showConfirmDialog(null, "Deseja realmente fechar a conta?", "Bar do Bugão",
-				JOptionPane.YES_NO_OPTION);
+		int confirmacao = JOptionPane.showConfirmDialog(null, "Deseja realmente fechar a conta?", "Bar do Bugão",JOptionPane.YES_NO_OPTION);
+		
+		float valorTotal = 0;
+		float valorPago = 0 ;
+		try {
+			valorTotal = itemComandaDAO.valorTotal(Integer.parseInt(numeroComanda));
+			valorPago = valorAPagar(Integer.parseInt(numeroComanda));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
 		if (confirmacao == JOptionPane.YES_OPTION) {
+			while(valorPago < valorTotal){
+				float valorRestante = valorTotal - valorPago;
+				JOptionPane.showMessageDialog(null, "Resta pagar R$ "+valorRestante, "Bar do Bugão",
+						JOptionPane.INFORMATION_MESSAGE);
+				efetuarPagamento();
+				try {
+					valorPago = valorAPagar(Integer.parseInt(numeroComanda));
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			try {
 				//chamando o metodo na classe DAO para fechar a comanda, passando o status coo parametro
 				fecharComanda(numeroComanda, "FECHADO");
 				atualizarComandas(tabelaComandas, lblQuantidade);
+				JOptionPane.showMessageDialog(null, "Comanda fechada", "Bar do Bugão",
+						JOptionPane.INFORMATION_MESSAGE);
+				limparComprovante();
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -508,7 +533,8 @@ public class FrmComandas extends ComandaDAO {
 				(String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
 		float valorTotal;
 		try {
-			valorTotal = itemComandaDAO.atualizarItensComanda(tabelaItensComanda, numeroComanda);
+			itemComandaDAO.atualizarItensComanda(tabelaItensComanda,numeroComanda);
+			valorTotal = itemComandaDAO.valorTotal(numeroComanda);
 			float valorPago = valorAPagar(numeroComanda);
 			float valorAPagar = valorTotal - valorPago;
 			comprovante(textCompro, numeroComanda);
@@ -533,7 +559,8 @@ public class FrmComandas extends ComandaDAO {
 				(String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
 		float valorTotal;
 		try {
-			valorTotal = itemComandaDAO.atualizarItensComanda(tabelaItensComanda, numeroComanda);
+			itemComandaDAO.atualizarItensComanda(tabelaItensComanda,numeroComanda);
+			valorTotal = itemComandaDAO.valorTotal(numeroComanda);
 			float valorPago = valorAPagar(numeroComanda);
 			float valorAPagar = valorTotal - valorPago;
 			txtValorTotal.setText("R$" + df.format(valorTotal));

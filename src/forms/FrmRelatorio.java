@@ -237,7 +237,8 @@ public class FrmRelatorio extends RelatorioDAO {
 				.parseInt((String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
 		float valorTotal;
 		try {
-			valorTotal = itemComandaDAO.atualizarItensComanda(tabelaItensComanda, numeroComanda);
+			itemComandaDAO.atualizarItensComanda(tabelaItensComanda,numeroComanda);
+			valorTotal = itemComandaDAO.valorTotal(numeroComanda);
 			comandaDAO.comprovante(textCompro, numeroComanda);
 			textCompro.setText(textCompro.getText() + " VALOR A TOTAL R$" + df.format(valorTotal));
 			textCompro.setText(textCompro.getText() + System.lineSeparator());

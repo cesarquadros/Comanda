@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 import dao.ComandaDAO;
+import dao.ItemComandaDAO;
 
 public class Pagamento extends ComandaDAO {
 	private int codComanda;
@@ -62,9 +63,19 @@ public class Pagamento extends ComandaDAO {
 		codComanda = Integer
 				.parseInt((String) tabelaComandas.getModel().getValueAt(tabelaComandas.getSelectedRow(), 0));
 
-		Pagamento pagamento = new Pagamento(codComanda, valorPagamento, observacaoPagamento);
+		ItemComandaDAO itemComandaDAO = new ItemComandaDAO();
+		float valorTotal = itemComandaDAO.valorTotal(codComanda);
+		float valorPago = valorAPagar(codComanda);
+		float valorRestante = valorTotal - valorPago;
 		
-		return efetuarPagamento(pagamento);
+		if(valorRestante<valorPagamento){
+			JOptionPane.showMessageDialog(null, "Valor inserido maior que o total da conta", "Bar do Bugão",
+					JOptionPane.ERROR_MESSAGE);
+		}else{
+			Pagamento pagamento = new Pagamento(codComanda, valorPagamento, observacaoPagamento);
+			return efetuarPagamento(pagamento);
+		}
+		return false;
 	}
 
 }
