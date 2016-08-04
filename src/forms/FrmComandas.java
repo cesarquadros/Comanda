@@ -65,6 +65,7 @@ public class FrmComandas extends ComandaDAO {
 	private JButton btnFecharComanda;
 	private JButton btnEfetuarPagamento;
 	private JButton btnAbrirComanda;
+	private JButton btnPendurar;
 	private DecimalFormat df = new DecimalFormat("0.00");
 	private JLabel lblNewLabel_1;
 	private JMenu mnProdutos;
@@ -267,6 +268,12 @@ public class FrmComandas extends ComandaDAO {
 		btnAbrirComanda.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnAbrirComanda.setBounds(9, 9, 131, 41);
 		panel.add(btnAbrirComanda);
+		
+		btnPendurar = new JButton("Pendurar");
+		btnPendurar.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnPendurar.setEnabled(false);
+		btnPendurar.setBounds(150, 9, 131, 41);
+		panel.add(btnPendurar);
 
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 1246, 21);
@@ -334,6 +341,7 @@ public class FrmComandas extends ComandaDAO {
 				// TODO Auto-generated method stub
 				if (e.getKeyCode() == KeyEvent.VK_F5) {
 					atualizarTabelaComanda();
+					
 				} else if (e.getKeyCode() == KeyEvent.VK_F6) {
 					fecharComanda();
 				} else if (e.getKeyCode() == KeyEvent.VK_F7) {
@@ -544,6 +552,7 @@ public class FrmComandas extends ComandaDAO {
 			txtValorPago.setText("R$" + df.format(valorPago));
 			txtValorRestante.setText("R$" + df.format(valorAPagar));
 			btnFecharComanda.setEnabled(true);
+			btnPendurar.setEnabled(true);
 			btnEfetuarPagamento.setEnabled(true);
 			tabelaItensComanda.getColumnModel().getColumn(6).setCellRenderer(new adicionarIcone(
 					(FrmComandas.class.getResource("/imagens/excluir.png")).toString()));
